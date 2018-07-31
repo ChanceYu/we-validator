@@ -55,7 +55,7 @@ Page({
                 },
                 str: {
                     required: true,
-                    isStringLength: 3
+                    stringLength: 3
                 },
             },
             messages: {
@@ -68,7 +68,7 @@ Page({
                 },
                 str: {
                     required: '请输入字符串',
-                    isStringLength: '字符串长度不对'
+                    stringLength: '字符串长度不对'
                 },
             },
         })
@@ -107,15 +107,15 @@ Page({
 
 - `required`: true，必填
 - `regex`: RegExp，正则通用校验
-- `isIntGreater`: n，大于n的数字
-- `isIntLength`: n，只能输入n位的数字
-- `isIntLessLength`: n，至少n位数字
-- `isIntLengthRange`: [n, m]，n到m位数字
-- `isDecimalLength`: n，只能输入有n位小数的正实数
-- `isDecimalLengthRange`: [n, m]，只能输入有n~m位小数的正实数
-- `isStringLength`: n，长度为n的字符串
-- `isStringLetter`: aorA，由26个英文字母组成的字符串，大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
-- `isStringLetterDefault`: true，由数字、26个英文字母或者下划线组成的字符串
+- `intGreater`: n，大于n的数字
+- `intLength`: n，只能输入n位的数字
+- `intLessLength`: n，至少n位数字
+- `intLengthRange`: [n, m]，n到m位数字
+- `decimalLength`: n，只能输入有n位小数的正实数
+- `decimalLengthRange`: [n, m]，只能输入有n~m位小数的正实数
+- `stringLength`: n，长度为n的字符串
+- `stringLetter`: aorA，由26个英文字母组成的字符串，大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
+- `stringLetterDefault`: true，由数字、26个英文字母或者下划线组成的字符串
 
 
 ## 注意

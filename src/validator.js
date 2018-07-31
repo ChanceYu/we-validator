@@ -47,7 +47,7 @@ const validator = {
      * @param str
      * @returns
      */
-    isIntGreater(str, n) {
+    intGreater(str, n) {
         return parseFloat(str, 10) >= n;
     },
 
@@ -57,7 +57,7 @@ const validator = {
      * @param n
      * @returns
      */
-    isIntLength(str, n) {
+    intLength(str, n) {
         if (validator.isNull(n)) {
             return false;
         }
@@ -71,7 +71,7 @@ const validator = {
      * @param n
      * @returns
      */
-    isIntLessLength(str, n) {
+    intLessLength(str, n) {
         if (validator.isNull(n)) {
             return false;
         }
@@ -86,7 +86,7 @@ const validator = {
      * @param m
      * @returns
      */
-    isIntLengthRange(str, n, m) {
+    intLengthRange(str, n, m) {
         if (validator.isNull(n) || validator.isNull(m)) {
             return false;
         }
@@ -100,7 +100,7 @@ const validator = {
      * @param n
      * @returns
      */
-    isDecimalLength(str, n) {
+    decimalLength(str, n) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + '})?$');
         return validator.regex(reg, str);
     },
@@ -112,7 +112,7 @@ const validator = {
      * @param m
      * @returns
      */
-    isDecimalLengthRange(str, n, m) {
+    decimalLengthRange(str, n, m) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + ',' + m + '})?$');
         return validator.regex(reg, str);
     },
@@ -122,7 +122,7 @@ const validator = {
      * @param str
      * @returns
      */
-    isStringLength(str, n) {
+    stringLength(str, n) {
         var reg = new RegExp('^.{' + n + '}$');
         return validator.regex(reg, str);
     },
@@ -133,7 +133,7 @@ const validator = {
      * @param aorA,大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
      * @returns
      */
-    isStringLetter(str, aorA) {
+    stringLetter(str, aorA) {
         var reg;
         if (validator.isNull(aorA)) {
             reg = /^[A-Za-z]+$/;
@@ -152,7 +152,7 @@ const validator = {
      * @param str
      * @returns
      */
-    isStringLetterDefault(str) {
+    stringLetterDefault(str) {
         var reg = /^\w+$/;
         return validator.regex(reg, str);
     }
