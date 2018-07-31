@@ -14,6 +14,19 @@ class WeValidator {
         checkRule: false // 是否校验规则的有效性
     }
 
+    /**
+     * 动态添加验证规则
+     * @param {String} name 规则名称
+     * @param {Function} method 规则验证函数
+     */
+    static addRule = (name, method) => {
+        if(validator.hasOwnProperty(name) || typeof method !== 'function') return
+        
+        validator[name] = function(str, ...param){
+            return method.call(validator, str, param)
+        }
+    }
+
     constructor(options = {}) {
         this.options = Object.assign({}, WeValidator.defaultOptions, options);
 
@@ -123,19 +136,6 @@ class WeValidator {
         return data;
     }
 
-}
-
-/**
- * 动态添加验证规则
- * @param {String} name 规则名称
- * @param {Function} method 规则验证函数
- */
-WeValidator.addRule = function (name, method) {
-    if(validator.hasOwnProperty(name) || typeof method !== 'function') return
-    
-    validator[name] = function(str, ...param){
-        return method.call(validator, str, param)
-    }
 }
 
 module.exports = WeValidator
