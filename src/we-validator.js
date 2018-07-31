@@ -88,12 +88,12 @@ class WeValidator {
   
           args.push(value);
   
-          switch (Tools.type(ruleValue)) {
-            case 'Function': // 动态属性校验时应该使用函数
+          switch (Object.prototype.toString.call(ruleValue)) {
+            case '[object Function]': // 动态属性校验时应该使用函数
               ruleValue = ruleValue(value);
               args.push(ruleValue);
               break;
-            case 'Array':
+            case '[object Array]':
               args = args.concat(ruleValue);
               break;
             default:
