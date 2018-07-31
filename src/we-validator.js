@@ -59,7 +59,7 @@ class WeValidator {
      */
     isRuleInvalid(ruleName, attr) {
         if (!validator.hasOwnProperty(ruleName)) {
-            console.warn(`没有此验证类型：${ruleName}，字段：${attr}`);
+            console.warn && console.warn(`没有此验证类型：${ruleName}，字段：${attr}`);
             return true
         }
     }
@@ -91,7 +91,7 @@ class WeValidator {
         for (let attr in _rules_) {
             // 遍历验证规则
             for (let ruleName in _rules_[attr]) {
-                if (this.options.validateRules) {
+                if (this.options.checkRule) {
                     if (this.isRuleInvalid(ruleName, attr)) continue;
                 }
 
