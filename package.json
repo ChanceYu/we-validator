@@ -1,0 +1,43 @@
+{
+  "name": "we-validator",
+  "version": "1.0.0",
+  "description": "小程序表单验证插件",
+  "main": "lib/we-validator.js",
+  "scripts": {
+    "build": "npm run build:pro && npm run build:dev",
+    "build:pro": "NODE_ENV=production webpack --config webpack.config --colors",
+    "build:dev": "NODE_ENV=development webpack --watch --config webpack.config --colors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ChanceYu/we-validator.git"
+  },
+  "keywords": [
+    "we-validator",
+    "validator",
+    "validation",
+    "weapp",
+    "wechat",
+    "mini-program",
+    "weapp-validator"
+  ],
+  "author": "ChanceYu",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babelify": "^7.3.0",
+    "uglify-js": "^3.1.3",
+    "webpack": "^3.6.0"
+  },
+  "bugs": {
+    "url": "https://github.com/ChanceYu/we-validator/issues"
+  },
+  "homepage": "https://github.com/ChanceYu/we-validator#readme"
+}
