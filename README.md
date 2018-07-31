@@ -76,6 +76,11 @@ Page({
 })
 ```
 
+## 参数
+
+- `rules` - 验证字段的规则
+- `messages` - 验证字段错误的提示信息
+- `checkRule` - 是否校验规则的有效性，默认不校验
 
 ## 支持的正则类型
 
@@ -117,28 +122,39 @@ Page({
 - `stringLetter`: aorA，由26个英文字母组成的字符串，大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
 - `stringLetterDefault`: true，由数字、26个英文字母或者下划线组成的字符串
 
-### 动态参数的使用
+##### 动态参数的使用
 ```javascript
-    new WeValidator({
-        rules: {
-            field1: {
-                intGreater: 6 // 大于6的数字
-            },
-            field2: {
-                intLengthRange: [2, 5] // 2-5位数字
-            }
+const WeValidator = require('we-validator')
+
+new WeValidator({
+    rules: {
+        field1: {
+            intGreater: 6 // 大于6的数字
         },
-        messages: {
-            field1: {
-                intGreater: '请输入大于6的数字'
-            },
-            field2: {
-                intLengthRange: '请输入2-5位数字'
-            }
+        field2: {
+            intLengthRange: [2, 5] // 2-5位数字
         }
-    })
+    },
+    messages: {
+        field1: {
+            intGreater: '请输入大于6的数字'
+        },
+        field2: {
+            intLengthRange: '请输入2-5位数字'
+        }
+    }
+})
 ```
 
+## 方法
+#### addRule 添加自定义规则
+```javascript
+const WeValidator = require('we-validator')
+
+WeValidator.addRule('theRuleName', function(value, param){
+    return /\d/.test(value)
+})
+```
 
 ## 注意
 默认错误的提示使用的是小程序中的 `showToast`

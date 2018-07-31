@@ -1,6 +1,6 @@
 {
   "name": "we-validator",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "小程序表单验证插件",
   "main": "lib/we-validator.js",
   "scripts": {

@@ -146,7 +146,7 @@ const validator = {
         }
         return validator.regex(reg, str);
     },
-    
+
     /**
      * 由数字、26个英文字母或者下划线组成的字符串
      * @param str
@@ -160,8 +160,8 @@ const validator = {
 
 validator.rules = rules
 
-for(let attr in rules){
-    validator[attr] = function(str){
+for (let attr in rules) {
+    validator[attr] = function (str) {
         return rules[attr].test(str)
     }
 }

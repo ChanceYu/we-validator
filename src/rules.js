@@ -17,7 +17,7 @@ module.exports = {
     // 中文（2-8位）
     chinese2to8: /^[\u4e00-\u9fa5\uF900-\uFA2D]{2,8}$/,
 
-    
+
     // 整数或小数
     intOrFloat: /^[0-9]+\.{0,1}[0-9]{0,2}$/,
 
@@ -59,7 +59,7 @@ module.exports = {
 
     // 邮编
     zip: /^[\d]{6}/,
-    
+
     // 匹配双字节字符(包括汉字在内)
     doubleByte: /[^\x00-\xff]/
-  }
+}
