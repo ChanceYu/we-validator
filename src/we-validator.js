@@ -25,6 +25,8 @@ class WeValidator {
         validator[name] = function(str, ...param){
             return method.call(validator, str, param)
         }
+
+        WeValidator[name] = validator[name]
     }
 
     constructor(options = {}) {
@@ -137,5 +139,10 @@ class WeValidator {
     }
 
 }
+
+// validator => WeValidator
+Object.keys(validator).forEach((attr) => {
+    WeValidator[attr] = validator[attr]
+})
 
 module.exports = WeValidator

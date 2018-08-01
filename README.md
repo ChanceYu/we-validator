@@ -34,7 +34,7 @@ const WeValidator = require('we-validator')
 Page({
     onReady(){
         this.initValidator()
-    }
+    },
     onSubmitForm(e){
         let { value } = e.detail
 
@@ -147,13 +147,22 @@ new WeValidator({
 ```
 
 ## 方法
-#### addRule 添加自定义规则
+###### addRule 添加自定义规则
 ```javascript
 const WeValidator = require('we-validator')
 
 WeValidator.addRule('theRuleName', function(value, param){
     return /\d/.test(value)
 })
+```
+
+###### 支持直接调用验证函数使用，更灵活
+```javascript
+const WeValidator = require('we-validator')
+
+let b1 = WeValidator.required('str')
+let b2 = WeValidator.mobile('str')
+let b3 = WeValidator.idCard('str')
 ```
 
 ## 注意

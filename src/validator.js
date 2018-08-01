@@ -62,7 +62,7 @@ const validator = {
             return false;
         }
         var reg = new RegExp('^\\d{' + n + '}$');
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -76,7 +76,7 @@ const validator = {
             return false;
         }
         var reg = new RegExp('^\\d{' + n + ',}$');
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -91,7 +91,7 @@ const validator = {
             return false;
         }
         var reg = new RegExp('^\\d{' + n + ',' + m + '}$');
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -102,7 +102,7 @@ const validator = {
      */
     decimalLength(str, n) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + '})?$');
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -114,7 +114,7 @@ const validator = {
      */
     decimalLengthRange(str, n, m) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + ',' + m + '})?$');
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -124,7 +124,7 @@ const validator = {
      */
     stringLength(str, n) {
         var reg = new RegExp('^.{' + n + '}$');
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -144,7 +144,7 @@ const validator = {
         } else {
             reg = /^[A-Za-z]+$/;
         }
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     },
 
     /**
@@ -154,7 +154,7 @@ const validator = {
      */
     stringLetterDefault(str) {
         var reg = /^\w+$/;
-        return validator.regex(reg, str);
+        return validator.regex(str, reg);
     }
 }
 

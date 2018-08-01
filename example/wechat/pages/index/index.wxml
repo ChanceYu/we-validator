@@ -1,0 +1,7 @@
+<form bindsubmit="onSubmitForm">
+    <input type="text" name="username" placeholder="用户名" />
+    <input type="number" name="phoneno" placeholder="手机号" />
+    <input type="text" name="str" placeholder="长度为3的字符串" />
+
+    <button type="default" formType="submit">提交</button>
+</form>
