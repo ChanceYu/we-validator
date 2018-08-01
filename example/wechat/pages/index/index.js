@@ -1,9 +1,5 @@
 const WeValidator = require('../../js/we-validator')
 
-WeValidator.onMessage = function(data){
-  console.log(data)
-}
-
 Page({
   onReady() {
     this.initValidator()
