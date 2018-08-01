@@ -15,8 +15,9 @@
 - 不依赖任何框架
 - 既支持原生微信小程序方式，也支持 mpvue、wepy等几乎任何小程序框架
 - 支持普通web使用方式
-- 支持添加自定义规则
-- 支持错误消息自定义显示方式
+- [支持自定义添加规则](#自定义添加规则)
+- 支持传递参数和[调用验证函数](#直接调用验证函数)两种验证方式
+- [支持自定义错误消息提示](#自定义错误消息提示)
 
 
 
@@ -88,9 +89,9 @@ Page({
 ```
 
 您可参考当前项目下对应示例
-- [原生微信小程序使用方式](./example/wechat)
-- [mpvue使用方式](./example/mpvue)
-- [普通web使用方式](./example/web)
+- [原生微信小程序使用方式](./example/wechat/pages/index/index.js)
+- [mpvue 使用方式](./example/mpvue/src/pages/index/index.vue)
+- [普通 web 使用方式](./example/web/index.html)
 
 ## 参数
 
@@ -138,7 +139,7 @@ Page({
 - `stringLetter`: aorA，由26个英文字母组成的字符串，大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
 - `stringLetterDefault`: true，由数字、26个英文字母或者下划线组成的字符串
 
-##### 动态参数的使用
+#### 动态参数的使用
 ```javascript
 const WeValidator = require('we-validator')
 
@@ -163,7 +164,7 @@ new WeValidator({
 ```
 
 ## 方法
-##### 添加自定义规则
+#### 自定义添加规则
 ```javascript
 const WeValidator = require('we-validator')
 
@@ -172,8 +173,8 @@ WeValidator.addRule('theRuleName', function(value, param){
 })
 ```
 
-##### 直接调用验证函数使用，更灵活
-支持以上所有规则类型的函数调用
+#### 直接调用验证函数
+更灵活，支持以上所有规则类型的函数调用
 ```javascript
 const WeValidator = require('we-validator')
 
@@ -182,7 +183,7 @@ let b2 = WeValidator.mobile('str')
 let b3 = WeValidator.idCard('str')
 ```
 
-##### 自定义消息提示
+#### 自定义错误消息提示
 可以全局配置一个，也可以单独配置。优先级是：参数onMessage > 全局onMessage > 默认
 ```javascript
 const WeValidator = require('we-validator')

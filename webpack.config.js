@@ -26,11 +26,11 @@ const getConfig = function (outputPath) {
         },
         plugins: [
             new webpack.BannerPlugin(
-                `${packageJSON.name}.js
-      Version: ${packageJSON.version}
-      Address: (https://github.com/ChanceYu/we-validator)
-      Author: ChanceYu
-      Licensed under the MIT license`)
+`${packageJSON.name}
+version: ${packageJSON.version}
+address: (https://github.com/ChanceYu/we-validator)
+author: ChanceYu
+Licensed under the MIT license`)
         ],
         resolve: {
             extensions: ['.js']
@@ -42,10 +42,7 @@ const getConfig = function (outputPath) {
     return config
 }
 
-let config = [
+module.exports = [
     getConfig(path.join(__dirname, 'lib')),
     getConfig(path.join(__dirname, 'example/wechat/js'))
-];
-
-
-module.exports = config
+]

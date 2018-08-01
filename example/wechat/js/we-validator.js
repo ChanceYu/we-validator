@@ -1,9 +1,9 @@
 /*!
- * we-validator.js
- *       Version: 1.3.1
- *       Address: (https://github.com/ChanceYu/we-validator)
- *       Author: ChanceYu
- *       Licensed under the MIT license
+ * we-validator
+ * version: 1.3.3
+ * address: (https://github.com/ChanceYu/we-validator)
+ * author: ChanceYu
+ * Licensed under the MIT license
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
