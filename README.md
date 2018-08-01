@@ -11,12 +11,12 @@
 
 ## 特点
 
-- 使用简单
+- 使用简单灵活
 - 不依赖任何框架
 - 既支持原生微信小程序方式，也支持 mpvue、wepy等几乎任何小程序框架
 - 支持普通web使用方式
 - [支持自定义添加规则](#自定义添加规则)
-- 支持传递参数和[调用验证函数](#直接调用验证函数)两种验证方式
+- 支持传递参数和[直接调用验证函数](#直接调用验证函数)两种验证方式
 - [支持自定义错误消息提示](#自定义错误消息提示)
 
 
@@ -29,6 +29,7 @@ npm install we-validator --save
 
 
 ## 使用
+
 下面是微信小程序的用法，支付宝小程序类似
 ```html
 <form bindsubmit="onSubmitForm">
@@ -97,10 +98,11 @@ Page({
 
 - `rules` - 验证字段的规则
 - `messages` - 验证字段错误的提示信息
-- `onMessage` - 错误提示显示方式，默认会自动检测环境，小程序默认里面使用`showToast`、普通web使用`alert`
+- `onMessage` - 错误提示显示方式，默认会自动检测环境。小程序默认使用`showToast`，普通web使用`alert`，[配置方式](#自定义错误消息提示)
 
 ## 支持的正则类型
 
+具体正则内容可查看[源码](./src/rules.js)
 - `bankCard` - 银行卡
 - `mobile` -  手机号
 - `mobileWithSpace` -  手机号（带空格`131 2233 4455`）
@@ -123,9 +125,9 @@ Page({
 - `zip` -  邮编
 - `doubleByte` -  匹配双字节字符(包括汉字在内)
 
-
 ## 规则
-除了以上所有正则规则，以下特殊规则也支持，可动态传参
+
+除了支持以上所有正则规则，以下特殊规则也支持，可动态传参（上面正则和下面特殊规则的使用方式一样）
 
 - `required`: true，必填
 - `regex`: RegExp，正则通用校验
@@ -143,6 +145,7 @@ Page({
 ```javascript
 const WeValidator = require('we-validator')
 
+// 实例化方式
 new WeValidator({
     rules: {
         field1: {
@@ -161,6 +164,10 @@ new WeValidator({
         }
     }
 })
+
+// 直接调用函数的方式
+let b1 = WeValidator.intGreater('str', 6) // 大于6的数字
+let b2 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 ```
 
 ## 方法
@@ -168,9 +175,27 @@ new WeValidator({
 ```javascript
 const WeValidator = require('we-validator')
 
+// 添加自定义规则
 WeValidator.addRule('theRuleName', function(value, param){
     return /\d/.test(value)
 })
+
+// 使用方式一
+new WeValidator({
+    rules: {
+        field1: {
+            theRuleName: true
+        }
+    },
+    message: {
+        field1: {
+            theRuleName: '提示信息'
+        }
+    }
+})
+
+// 使用方式二
+WeValidator.theRuleName('str')
 ```
 
 #### 直接调用验证函数
@@ -181,6 +206,7 @@ const WeValidator = require('we-validator')
 let b1 = WeValidator.required('str')
 let b2 = WeValidator.mobile('str')
 let b3 = WeValidator.idCard('str')
+let b4 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 ```
 
 #### 自定义错误消息提示
@@ -191,15 +217,17 @@ const WeValidator = require('we-validator')
 // 全局配置
 WeValidator.onMessage = function(data){
     /*
+    data 参数
     {
         msg, // 提示文字
         name, // 表单控件的 name
         value, // 表单控件的值
-        param // rules 传递的参数 []
-    }*/
+        param // rules 验证字段传递的参数 []
+    }
+    */
 }
 
-// 单独配置
+// 参数配置
 new WeValidator({
     rules: {},
     message: {},
