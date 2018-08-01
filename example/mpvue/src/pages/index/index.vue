@@ -25,7 +25,7 @@ export default {
 
       // 开始提交表单
       // wx.request
-      console.log("submiting");
+      console.log('submiting');
     },
 
     initValidator () {
@@ -45,15 +45,15 @@ export default {
         },
         messages: {
           username: {
-            required: "请输入用户名"
+            required: '请输入用户名'
           },
           phoneno: {
-            required: "请输入手机号",
-            mobile: "手机号格式不正确"
+            required: '请输入手机号',
+            mobile: '手机号格式不正确'
           },
           str: {
-            required: "请输入字符串",
-            stringLength: "字符串长度不对"
+            required: '请输入字符串',
+            stringLength: '字符串长度不对'
           }
         }
       });

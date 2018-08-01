@@ -28,16 +28,16 @@ const getConfig = function (outputPath) {
             new webpack.BannerPlugin(
 `${packageJSON.name}
 version: ${packageJSON.version}
-address: (https://github.com/ChanceYu/we-validator)
-author: ChanceYu
-Licensed under the MIT license`)
+address: ${packageJSON.homepage}
+author:  ${packageJSON.author}
+license: ${packageJSON.license}`)
         ],
         resolve: {
             extensions: ['.js']
         }
     }
 
-    if (outputPath) config.output.path = outputPath
+    config.output.path = outputPath
 
     return config
 }

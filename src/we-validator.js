@@ -10,22 +10,27 @@ class WeValidator {
 
     static defaultOptions = {
         rules: {},
-        messages: {}
+        messages: {},
+        onMessage: null
     }
 
     /**
+     * 获取字段值
+     * @param {String} name 字段名称
+     */
+    static $value = (name) => ((value, data) => data[name])
+
+    /**
      * 动态添加验证规则
-     * @param {String} name 规则名称
+     * @param {String} ruleName 规则名称
      * @param {Function} method 规则验证函数
      */
-    static addRule = (name, method) => {
-        if(validator.hasOwnProperty(name) || typeof method !== 'function') return
+    static addRule = (ruleName, method) => {
+        if(validator.hasOwnProperty(ruleName) || typeof method !== 'function') return
         
-        validator[name] = function(str, ...param){
-            return method.call(validator, str, param)
-        }
+        validator[ruleName] = (value, ...param) => method.call(validator, value, param)
 
-        WeValidator[name] = validator[name]
+        WeValidator[ruleName] = validator[ruleName]
     }
 
     constructor(options = {}) {
@@ -100,7 +105,7 @@ class WeValidator {
     checkData(data) {
         let _rules_ = this.options.rules;
         let _messages_ = this.options.messages;
-        let result = null;
+        let result = {};
 
         // 遍历字段
         for (let attr in _rules_) {
@@ -121,7 +126,7 @@ class WeValidator {
 
                 switch (Object.prototype.toString.call(ruleValue)) {
                     case '[object Function]': // 动态属性校验时应该使用函数
-                        ruleValue = ruleValue(value);
+                        ruleValue = ruleValue(value, data);
                         args.push(ruleValue);
                         break;
                     case '[object Array]':
@@ -134,8 +139,10 @@ class WeValidator {
 
                 if (validator[ruleName].apply(validator, args)) {
                     // 验证通过
-                    result = result || {};
-                    result[attr] = value;
+                    result[attr] = {
+                        name: attr,
+                        value: value
+                    }
                 } else {
                     // 验证不通过
                     if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
@@ -151,14 +158,16 @@ class WeValidator {
             }
         }
 
-        return data;
+        return result;
     }
 
 }
 
 // validator => WeValidator
-Object.keys(validator).forEach((attr) => {
+for (let attr in validator) {
+    if(!validator.hasOwnProperty(attr)) continue
+    
     WeValidator[attr] = validator[attr]
-})
+}
 
 module.exports = WeValidator

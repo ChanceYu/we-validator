@@ -1,9 +1,9 @@
 /*!
  * we-validator
- * version: 1.3.3
- * address: (https://github.com/ChanceYu/we-validator)
- * author: ChanceYu
- * Licensed under the MIT license
+ * version: 1.3.4
+ * address: https://github.com/ChanceYu/we-validator#readme
+ * author:  ChanceYu
+ * license: MIT
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -104,6 +104,11 @@ var isWxMini = typeof wx !== 'undefined' && !!wx.showToast;
 var isAliMini = typeof my !== 'undefined' && !!my.showToast;
 
 var WeValidator = function () {
+
+    /**
+     * 获取字段值
+     * @param {String} name 字段名称
+     */
     function WeValidator() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -121,7 +126,7 @@ var WeValidator = function () {
 
     /**
      * 动态添加验证规则
-     * @param {String} name 规则名称
+     * @param {String} ruleName 规则名称
      * @param {Function} method 规则验证函数
      */
 
@@ -200,7 +205,7 @@ var WeValidator = function () {
         value: function checkData(data) {
             var _rules_ = this.options.rules;
             var _messages_ = this.options.messages;
-            var result = null;
+            var result = {};
 
             // 遍历字段
             for (var attr in _rules_) {
@@ -222,7 +227,7 @@ var WeValidator = function () {
                     switch (Object.prototype.toString.call(ruleValue)) {
                         case '[object Function]':
                             // 动态属性校验时应该使用函数
-                            ruleValue = ruleValue(value);
+                            ruleValue = ruleValue(value, data);
                             args.push(ruleValue);
                             break;
                         case '[object Array]':
@@ -235,8 +240,10 @@ var WeValidator = function () {
 
                     if (_validator2.default[ruleName].apply(_validator2.default, args)) {
                         // 验证通过
-                        result = result || {};
-                        result[attr] = value;
+                        result[attr] = {
+                            name: attr,
+                            value: value
+                        };
                     } else {
                         // 验证不通过
                         if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
@@ -252,7 +259,7 @@ var WeValidator = function () {
                 }
             }
 
-            return data;
+            return result;
         }
     }]);
 
@@ -264,25 +271,34 @@ var WeValidator = function () {
 
 WeValidator.defaultOptions = {
     rules: {},
-    messages: {} };
+    messages: {},
+    onMessage: null };
 
-WeValidator.addRule = function (name, method) {
-    if (_validator2.default.hasOwnProperty(name) || typeof method !== 'function') return;
+WeValidator.$value = function (name) {
+    return function (value, data) {
+        return data[name];
+    };
+};
 
-    _validator2.default[name] = function (str) {
+WeValidator.addRule = function (ruleName, method) {
+    if (_validator2.default.hasOwnProperty(ruleName) || typeof method !== 'function') return;
+
+    _validator2.default[ruleName] = function (value) {
         for (var _len = arguments.length, param = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
             param[_key - 1] = arguments[_key];
         }
 
-        return method.call(_validator2.default, str, param);
+        return method.call(_validator2.default, value, param);
     };
 
-    WeValidator[name] = _validator2.default[name];
+    WeValidator[ruleName] = _validator2.default[ruleName];
 };
 
-Object.keys(_validator2.default).forEach(function (attr) {
+for (var attr in _validator2.default) {
+    if (!_validator2.default.hasOwnProperty(attr)) continue;
+
     WeValidator[attr] = _validator2.default[attr];
-});
+}
 
 module.exports = WeValidator;
 
@@ -308,7 +324,6 @@ var validator = {
      * 校验通用
      * @param str
      * @param reg
-     * @returns
      */
     regex: function regex(str, reg) {
         if (validator.isNull(reg)) {
@@ -323,7 +338,6 @@ var validator = {
     /**
      * 必填
      * @param str
-     * @returns
      */
     required: function required(str) {
         return !validator.isNull(str);
@@ -333,7 +347,6 @@ var validator = {
     /**
      * 空的校验
      * @param param
-     * @returns {Boolean}
      */
     isNull: function isNull(str) {
         if (typeof str === 'undefined' || str === null || str === 'null' || str === '') {
@@ -345,9 +358,18 @@ var validator = {
 
 
     /**
+     * 相同
+     * @param str
+     * @param str2
+     */
+    equal: function equal(str, str2) {
+        return str === str2;
+    },
+
+
+    /**
      * 大于n的数字
      * @param str
-     * @returns
      */
     intGreater: function intGreater(str, n) {
         return parseFloat(str, 10) >= n;
@@ -358,7 +380,6 @@ var validator = {
      * 只能输入n位的数字
      * @param str
      * @param n
-     * @returns
      */
     intLength: function intLength(str, n) {
         if (validator.isNull(n)) {
@@ -373,7 +394,6 @@ var validator = {
      * 至少n位数字
      * @param str
      * @param n
-     * @returns
      */
     intLessLength: function intLessLength(str, n) {
         if (validator.isNull(n)) {
@@ -389,7 +409,6 @@ var validator = {
      * @param str
      * @param n
      * @param m
-     * @returns
      */
     intLengthRange: function intLengthRange(str, n, m) {
         if (validator.isNull(n) || validator.isNull(m)) {
@@ -404,7 +423,6 @@ var validator = {
      * 只能输入有n位小数的正实数
      * @param str
      * @param n
-     * @returns
      */
     decimalLength: function decimalLength(str, n) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + '})?$');
@@ -417,7 +435,6 @@ var validator = {
      * @param str
      * @param n
      * @param m
-     * @returns
      */
     decimalLengthRange: function decimalLengthRange(str, n, m) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + ',' + m + '})?$');
@@ -428,7 +445,6 @@ var validator = {
     /**
      * 长度为n的字符串
      * @param str
-     * @returns
      */
     stringLength: function stringLength(str, n) {
         var reg = new RegExp('^.{' + n + '}$');
@@ -439,8 +455,7 @@ var validator = {
     /**
      * 由26个英文字母组成的字符串
      * @param str
-     * @param aorA,大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
-     * @returns
+     * @param aorA,大写或小写类型，A表示大写，a表示小写，其它表示不限制大小写
      */
     stringLetter: function stringLetter(str, aorA) {
         var reg;
@@ -460,7 +475,6 @@ var validator = {
     /**
      * 由数字、26个英文字母或者下划线组成的字符串
      * @param str
-     * @returns
      */
     stringLetterDefault: function stringLetterDefault(str) {
         var reg = /^\w+$/;
@@ -470,14 +484,20 @@ var validator = {
 
 validator.rules = _rules2.default;
 
+// rules => validator
+
 var _loop = function _loop(attr) {
+    if (!_rules2.default.hasOwnProperty(attr)) return 'continue';
+
     validator[attr] = function (str) {
         return _rules2.default[attr].test(str);
     };
 };
 
 for (var attr in _rules2.default) {
-    _loop(attr);
+    var _ret = _loop(attr);
+
+    if (_ret === 'continue') continue;
 }
 
 module.exports = validator;

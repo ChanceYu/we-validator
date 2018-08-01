@@ -6,38 +6,59 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>we-validator</title>
     <style>
-        input{
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        form{
             margin: 10px;
-            padding: 10px;
+        }
+        input{
+            margin: 10px 0;
+            padding: 10px 0;
+            text-indent: 10px;
             border: 1px solid #eee;
             font-size: 16px;
             display: block;
+            width: 100%;
         }
 
         button{
-            margin: 10px;
+            padding: 10px 0;
+            width: 100%;
+            border: 1px solid #eee;
         }
     </style>
 </head>
 <body>
     <form id="submitForm">
         <input type="text" name="username" placeholder="用户名" />
+        <input type="password" name="pwd1" placeholder="密码" />
+        <input type="password" name="pwd2" placeholder="确认密码" />
         <input type="number" name="phoneno" placeholder="手机号" />
         <input type="text" name="str" placeholder="长度为3的字符串" />
 
-        <button type="submit">提交</button>
+        <button id="submitButton" type="button">提交</button>
     </form>
 
     <script src="../../lib//we-validator.js"></script>
 
     <script>
         // 注意：此实例比较简单，请结合实际项目修改
-        var oForm = document.getElementById('submitForm');
+        var submitForm = document.getElementById('submitForm');
+        var submitButton = document.getElementById('submitButton');
         
         var oValidator = new WeValidator({
             rules: {
                 username: {
                     required: true
+                },
+                pwd1: {
+                    required: true
+                },
+                pwd2: {
+                    required: true,
+                    equal: WeValidator.$value('pwd1')
                 },
                 phoneno: {
                     required: true,
@@ -50,20 +71,27 @@
             },
             messages: {
                 username: {
-                    required: "请输入用户名"
+                    required: '请输入用户名'
+                },
+                pwd1: {
+                    required: '请输入密码'
+                },
+                pwd2: {
+                    required: '请输入确认密码',
+                    equal: '两次密码不一致'
                 },
                 phoneno: {
-                    required: "请输入手机号",
-                    mobile: "手机号格式不正确"
+                    required: '请输入手机号',
+                    mobile: '手机号格式不正确'
                 },
                 str: {
-                    required: "请输入字符串",
-                    stringLength: "字符串长度不对"
+                    required: '请输入字符串',
+                    stringLength: '字符串长度不对'
                 }
             }
         });
 
-        oForm.onsubmit = function(e){
+        submitButton.onclick = function(){
             var data = getFormData();
 
             console.log(data)
@@ -73,7 +101,7 @@
         }
 
         function getFormData(){
-            var elements = oForm.elements;
+            var elements = submitForm.elements;
             var i = 0;
             var len = elements.length;
 

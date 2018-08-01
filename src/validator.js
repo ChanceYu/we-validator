@@ -9,7 +9,6 @@ const validator = {
      * 校验通用
      * @param str
      * @param reg
-     * @returns
      */
     regex(str, reg) {
         if (validator.isNull(reg)) {
@@ -23,7 +22,6 @@ const validator = {
     /**
      * 必填
      * @param str
-     * @returns
      */
     required(str) {
         return !validator.isNull(str);
@@ -32,7 +30,6 @@ const validator = {
     /**
      * 空的校验
      * @param param
-     * @returns {Boolean}
      */
     isNull(str) {
         if (typeof (str) === 'undefined' || str === null || str === 'null' || str === '') {
@@ -43,9 +40,17 @@ const validator = {
     },
 
     /**
+     * 相同
+     * @param str
+     * @param str2
+     */
+    equal(str, str2){
+        return str === str2
+    },
+
+    /**
      * 大于n的数字
      * @param str
-     * @returns
      */
     intGreater(str, n) {
         return parseFloat(str, 10) >= n;
@@ -55,7 +60,6 @@ const validator = {
      * 只能输入n位的数字
      * @param str
      * @param n
-     * @returns
      */
     intLength(str, n) {
         if (validator.isNull(n)) {
@@ -69,7 +73,6 @@ const validator = {
      * 至少n位数字
      * @param str
      * @param n
-     * @returns
      */
     intLessLength(str, n) {
         if (validator.isNull(n)) {
@@ -84,7 +87,6 @@ const validator = {
      * @param str
      * @param n
      * @param m
-     * @returns
      */
     intLengthRange(str, n, m) {
         if (validator.isNull(n) || validator.isNull(m)) {
@@ -98,7 +100,6 @@ const validator = {
      * 只能输入有n位小数的正实数
      * @param str
      * @param n
-     * @returns
      */
     decimalLength(str, n) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + '})?$');
@@ -110,7 +111,6 @@ const validator = {
      * @param str
      * @param n
      * @param m
-     * @returns
      */
     decimalLengthRange(str, n, m) {
         var reg = new RegExp('^[0-9]+(.[0-9]{' + n + ',' + m + '})?$');
@@ -120,7 +120,6 @@ const validator = {
     /**
      * 长度为n的字符串
      * @param str
-     * @returns
      */
     stringLength(str, n) {
         var reg = new RegExp('^.{' + n + '}$');
@@ -130,8 +129,7 @@ const validator = {
     /**
      * 由26个英文字母组成的字符串
      * @param str
-     * @param aorA,大写或小写类型，A表示大写，a表示小写，不指定或其他置顶表示不限制大小写
-     * @returns
+     * @param aorA,大写或小写类型，A表示大写，a表示小写，其它表示不限制大小写
      */
     stringLetter(str, aorA) {
         var reg;
@@ -150,7 +148,6 @@ const validator = {
     /**
      * 由数字、26个英文字母或者下划线组成的字符串
      * @param str
-     * @returns
      */
     stringLetterDefault(str) {
         var reg = /^\w+$/;
@@ -160,10 +157,11 @@ const validator = {
 
 validator.rules = rules
 
+// rules => validator
 for (let attr in rules) {
-    validator[attr] = function (str) {
-        return rules[attr].test(str)
-    }
+    if(!rules.hasOwnProperty(attr)) continue
+
+    validator[attr] = (str) => rules[attr].test(str)
 }
 
 module.exports = validator
