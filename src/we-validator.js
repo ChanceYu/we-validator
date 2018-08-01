@@ -10,8 +10,7 @@ class WeValidator {
 
     static defaultOptions = {
         rules: {},
-        messages: {},
-        checkRule: false // 是否校验规则的有效性
+        messages: {}
     }
 
     /**

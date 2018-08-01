@@ -3,10 +3,11 @@
 
 [![NPM][img-npm]][url-npm]
 
+[![Build Status][img-travis]][url-travis]
 [![Language][img-javascript]][url-github]
 [![License][img-mit]][url-mit]
 
-小程序表单验证插件，支持微信小程序、支付宝小程序以及普通web页面使用。
+支持微信小程序、支付宝小程序以及普通web页面使用。
 
 ## 特点
 
@@ -214,9 +215,11 @@ new WeValidator({
 
 [url-github]: https://github.com/ChanceYu/we-validator
 [url-npm]: https://www.npmjs.com/package/we-validator
+[url-travis]: https://travis-ci.org/ChanceYu/we-validator
 [url-mit]: https://opensource.org/licenses/mit-license.php
 
 [img-npm]: https://nodei.co/npm/we-validator.png?compact=true
+[img-travis]: https://travis-ci.org/ChanceYu/we-validator.svg?branch=master
 [img-javascript]: https://img.shields.io/badge/language-JavaScript-brightgreen.svg
 [img-mit]: https://img.shields.io/badge/license-MIT-blue.svg
 
