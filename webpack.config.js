@@ -5,8 +5,6 @@ const path = require('path');
 
 const packageJSON = require('./package.json');
 
-const year = new Date().getFullYear();
-
 const getConfig = function (outputPath) {
     let config = {
         entry: path.join(__dirname, 'src/we-validator.js'),

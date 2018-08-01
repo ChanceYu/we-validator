@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>we-validator</title>
+    <style>
+        input{
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+            font-size: 16px;
+            display: block;
+        }
+
+        button{
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form id="submitForm">
+        <input type="text" name="username" placeholder="用户名" />
+        <input type="number" name="phoneno" placeholder="手机号" />
+        <input type="text" name="str" placeholder="长度为3的字符串" />
+
+        <button type="submit">提交</button>
+    </form>
+
+    <script src="../../lib//we-validator.js"></script>
+
+    <script>
+        // 注意：此实例比较简单，请结合实际项目修改
+        var oForm = document.getElementById('submitForm');
+        
+        var oValidator = new WeValidator({
+            rules: {
+            username: {
+                required: true
+            },
+            phoneno: {
+                required: true,
+                mobile: true
+            },
+            str: {
+                required: true,
+                stringLength: 3
+            }
+            },
+            messages: {
+            username: {
+                required: "请输入用户名"
+            },
+            phoneno: {
+                required: "请输入手机号",
+                mobile: "手机号格式不正确"
+            },
+            str: {
+                required: "请输入字符串",
+                stringLength: "字符串长度不对"
+            }
+            }
+        });
+
+        oForm.onsubmit = function(e){
+            var data = getFormData();
+
+            console.log(data)
+            if (!oValidator.checkData(data)) return;
+
+            return false
+        }
+
+        function getFormData(){
+            var elements = oForm.elements;
+            var i = 0;
+            var len = elements.length;
+
+            var data = {};
+
+            for(; i < len; i++){
+                var control = elements[i];
+
+                if(control.name){
+                    data[control.name] = control.value
+                }
+            }
+
+            return data
+        }
+    </script>
+</body>
+</html>

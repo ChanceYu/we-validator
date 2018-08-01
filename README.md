@@ -6,7 +6,17 @@
 [![Language][img-javascript]][url-github]
 [![License][img-mit]][url-mit]
 
-小程序表单验证插件，支持微信小程序和支付宝小程序使用。使用简单，不依赖任何框架，但是能和任何框架结合使用，例如mpvue、wepy等
+小程序表单验证插件，支持微信小程序、支付宝小程序以及普通web页面使用。
+
+## 特点
+
+- 使用简单
+- 不依赖任何框架
+- 既支持原生微信小程序方式，也支持 mpvue、wepy等几乎任何小程序框架
+- 支持普通web使用方式
+- 支持添加自定义规则
+- 支持错误消息自定义显示方式
+
 
 
 ## 安装
@@ -76,11 +86,16 @@ Page({
 })
 ```
 
+您可参考当前项目下对应示例
+- [原生微信小程序使用方式](./example/wechat)
+- [mpvue使用方式](./example/mpvue)
+- [普通web使用方式](./example/web)
+
 ## 参数
 
 - `rules` - 验证字段的规则
 - `messages` - 验证字段错误的提示信息
-- `checkRule` - 是否校验规则的有效性，默认不校验。如果校验的话，在插件初始化和调用 `checkData` 方法时会校验规则的有效性，如果无效会在控制台提示，并忽略此规则
+- `onMessage` - 错误提示显示方式，默认会自动检测环境，小程序默认里面使用`showToast`、普通web使用`alert`
 
 ## 支持的正则类型
 
@@ -147,7 +162,7 @@ new WeValidator({
 ```
 
 ## 方法
-###### addRule 添加自定义规则
+##### 添加自定义规则
 ```javascript
 const WeValidator = require('we-validator')
 
@@ -156,7 +171,8 @@ WeValidator.addRule('theRuleName', function(value, param){
 })
 ```
 
-###### 支持直接调用验证函数使用，更灵活
+##### 直接调用验证函数使用，更灵活
+支持以上所有规则类型的函数调用
 ```javascript
 const WeValidator = require('we-validator')
 
@@ -165,8 +181,31 @@ let b2 = WeValidator.mobile('str')
 let b3 = WeValidator.idCard('str')
 ```
 
-## 注意
-默认错误的提示使用的是小程序中的 `showToast`
+##### 自定义消息提示
+可以全局配置一个，也可以单独配置。优先级是：参数onMessage > 全局onMessage > 默认
+```javascript
+const WeValidator = require('we-validator')
+
+// 全局配置
+WeValidator.onMessage = function(data){
+    /*
+    {
+        msg, // 提示文字
+        name, // 表单控件的 name
+        value, // 表单控件的值
+        param // rules 传递的参数 []
+    }*/
+}
+
+// 单独配置
+new WeValidator({
+    rules: {},
+    message: {},
+    onMessage: function(data){
+        alert(data.msg)
+    }
+})
+```
 
 ## 协议
 

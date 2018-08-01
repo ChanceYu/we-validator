@@ -1,6 +1,8 @@
 const WeValidator = require('../../js/we-validator')
 
-wx.WeValidator = WeValidator
+WeValidator.onMessage = function(data){
+  console.log(data)
+}
 
 Page({
   onReady() {

@@ -1,5 +1,6 @@
 src
 dist
+example
 node_modules
 *.js.map
 webpack.config.js

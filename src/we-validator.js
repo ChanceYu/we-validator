@@ -3,8 +3,8 @@ import validator from './validator'
 /**
  * 简单判断是微信小程序还是支付宝小程序
  */
-const isWeChat = typeof wx !== 'undefined'
-const isAlipay = typeof my !== 'undefined'
+const isWxMini = typeof wx !== 'undefined' && !!wx.showToast
+const isAliMini = typeof my !== 'undefined' && !!my.showToast
 
 class WeValidator {
 
@@ -32,27 +32,41 @@ class WeValidator {
     constructor(options = {}) {
         this.options = Object.assign({}, WeValidator.defaultOptions, options);
 
-        if (this.options.checkRule) {
-            this.checkRules()
-        }
+        this.checkRules()
     }
 
     /**
      * 显示错误提示
      */
-    showErrorMessage(msg) {
-        if (isWeChat) {
-            wx.showToast({
-                title: msg,
-                icon: 'none'
-            })
+    showErrorMessage(data) {
+        data.value = data.param.splice(0,1)[0]
+
+        // 参数配置
+        if(typeof this.options.onMessage === 'function'){
+            return this.options.onMessage(data)
         }
 
-        if (isAlipay) {
+        // 全局配置
+        if(typeof WeValidator.onMessage === 'function'){
+            return WeValidator.onMessage(data)
+        }
+        
+        // 默认配置
+        if (isWxMini) {
+            // 微信小程序
+            wx.showToast({
+                title: data.msg,
+                icon: 'none'
+            })
+        }else if(isAliMini){
+            // 支付宝小程序
             my.showToast({
-                content: msg,
+                content: data.msg,
                 type: 'none'
             })
+        }else{
+            // 普通 web
+            alert(data.msg)
         }
     }
 
@@ -93,9 +107,7 @@ class WeValidator {
         for (let attr in _rules_) {
             // 遍历验证规则
             for (let ruleName in _rules_[attr]) {
-                if (this.options.checkRule) {
-                    if (this.isRuleInvalid(ruleName, attr)) continue;
-                }
+                if (this.isRuleInvalid(ruleName, attr)) continue;
 
                 let ruleValue = _rules_[attr][ruleName];
                 let value = '';
@@ -128,7 +140,12 @@ class WeValidator {
                 } else {
                     // 验证不通过
                     if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                        this.showErrorMessage(_messages_[attr][ruleName]);
+                        this.showErrorMessage({
+                            name: attr,
+                            param: args,
+                            rule: ruleName,
+                            msg: _messages_[attr][ruleName]
+                        });
                     }
                     return false;
                 }
