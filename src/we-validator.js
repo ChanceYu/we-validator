@@ -75,7 +75,7 @@ class WeValidator {
     }
 
     /**
-     * 验证配置规则是否正确，无效，返回 true
+     * 验证配置规则是否无效
      */
     isRuleInvalid(ruleName, attr) {
         if (!validator.hasOwnProperty(ruleName)) {
