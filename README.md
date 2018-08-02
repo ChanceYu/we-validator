@@ -57,6 +57,7 @@ Page({
         // wx.request
     },
     initValidator(){
+        // 实例化
         this.oValidator = new WeValidator({
             rules: {
                 username: {
@@ -147,7 +148,7 @@ Page({
 ```javascript
 const WeValidator = require('we-validator')
 
-// 使用方式一（推荐）
+// 使用方式一，实例化（推荐）
 new WeValidator({
     rules: {
         field1: {
@@ -167,7 +168,7 @@ new WeValidator({
     }
 })
 
-// 使用方式二
+// 使用方式二，调用函数
 let b1 = WeValidator.intGreater('str', 6) // 大于6的数字
 let b2 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 ```
@@ -178,6 +179,7 @@ let b2 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 ```javascript
 const WeValidator = require('we-validator')
 
+// 实例化
 new WeValidator({
     rules: {
         pwd1: {
@@ -212,7 +214,7 @@ WeValidator.addRule('theRuleName', function(value, param){
     return /\d/.test(value)
 })
 
-// 使用方式一
+// 使用方式一，实例化
 new WeValidator({
     rules: {
         field1: {
@@ -226,7 +228,7 @@ new WeValidator({
     }
 })
 
-// 使用方式二
+// 使用方式二，调用函数
 WeValidator.theRuleName('str')
 ```
 
