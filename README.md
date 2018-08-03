@@ -1,5 +1,5 @@
 # we-validator
-小程序表单验证插件
+简单灵活的表单验证插件
 
 [![NPM][img-npm]][url-npm]
 
