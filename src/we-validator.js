@@ -1,7 +1,10 @@
 import validator from './validator'
 
 /**
- * 简单判断是微信小程序还是支付宝小程序
+ * 环境检测：
+ * 微信小程序
+ * 支付宝小程序
+ * Nodejs
  */
 const isWxMini = typeof wx !== 'undefined' && !!wx.showToast
 const isAliMini = typeof my !== 'undefined' && !!my.showToast

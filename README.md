@@ -22,7 +22,7 @@
 
 
 ## 安装
-
+非npm安装方式，直接引入lib目录下的we-validator.js到项目即可
 ```bash
 npm install we-validator --save
 ```
