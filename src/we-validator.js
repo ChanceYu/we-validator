@@ -5,6 +5,7 @@ import validator from './validator'
  */
 const isWxMini = typeof wx !== 'undefined' && !!wx.showToast
 const isAliMini = typeof my !== 'undefined' && !!my.showToast
+const isNodeEnv = typeof module !== 'undefined' && module.exports
 
 class WeValidator {
 
@@ -56,22 +57,27 @@ class WeValidator {
         }
         
         // 默认配置
-        if (isWxMini) {
-            // 微信小程序
-            wx.showToast({
+        // 微信小程序
+        if(isWxMini) {
+            return wx.showToast({
                 title: data.msg,
                 icon: 'none'
             })
-        }else if(isAliMini){
-            // 支付宝小程序
-            my.showToast({
+        }
+        
+        // 支付宝小程序
+        if(isAliMini){
+            return my.showToast({
                 content: data.msg,
                 type: 'none'
             })
-        }else{
-            // 普通 web
-            alert(data.msg)
         }
+
+        // Nodejs 不做处理
+        if(isNodeEnv) return
+
+        // 普通浏览器
+        alert(data.msg)
     }
 
     /**

@@ -1,6 +1,6 @@
 /*!
  * we-validator
- * version: 1.3.4
+ * version: 1.3.6
  * address: https://github.com/ChanceYu/we-validator#readme
  * author:  ChanceYu
  * license: MIT
@@ -102,6 +102,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 var isWxMini = typeof wx !== 'undefined' && !!wx.showToast;
 var isAliMini = typeof my !== 'undefined' && !!my.showToast;
+var isNodeEnv = typeof module !== 'undefined' && module.exports;
 
 var WeValidator = function () {
 
@@ -147,26 +148,31 @@ var WeValidator = function () {
             }
 
             // 默认配置
+            // 微信小程序
             if (isWxMini) {
-                // 微信小程序
-                wx.showToast({
+                return wx.showToast({
                     title: data.msg,
                     icon: 'none'
                 });
-            } else if (isAliMini) {
-                // 支付宝小程序
-                my.showToast({
+            }
+
+            // 支付宝小程序
+            if (isAliMini) {
+                return my.showToast({
                     content: data.msg,
                     type: 'none'
                 });
-            } else {
-                // 普通 web
-                alert(data.msg);
             }
+
+            // Nodejs 不做处理
+            if (isNodeEnv) return;
+
+            // 普通浏览器
+            alert(data.msg);
         }
 
         /**
-         * 验证配置规则是否正确，无效，返回 true
+         * 验证配置规则是否无效
          */
 
     }, {
