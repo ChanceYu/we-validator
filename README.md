@@ -93,13 +93,13 @@ Page({
 您可参考当前项目下对应示例
 - [原生微信小程序使用方式](./example/wechat/pages/index/index.js)
 - [mpvue 使用方式](./example/mpvue/src/pages/index/index.vue)
-- [普通 web 使用方式](./example/web/index.html)
+- [web 浏览器使用方式](./example/web/index.html)
 
 ## 参数
 
 - `rules` - 验证字段的规则
 - `messages` - 验证字段错误的提示信息
-- `onMessage` - 错误提示显示方式，默认会自动检测环境。小程序默认使用`showToast`，普通web使用`alert`，[配置方式](#自定义错误消息提示)
+- `onMessage` - 错误提示显示方式，默认会自动检测环境。小程序默认使用`showToast`，普通web浏览器默认使用`alert`，Nodejs端不做处理建议自己配置，[配置方式](#自定义错误消息提示)
 
 ## 支持的正则类型
 
@@ -246,7 +246,7 @@ let b4 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 
 #### 自定义错误消息提示
 
-可以全局配置一个，也可以单独配置。优先级是：参数onMessage > 全局onMessage > 默认
+可以全局配置一个，也可以单独配置。优先级是：验证的时候onMessage > 实例化参数onMessage > 全局onMessage > 默认检测
 ```javascript
 const WeValidator = require('we-validator')
 
@@ -263,7 +263,7 @@ WeValidator.onMessage = function(data){
     */
 }
 
-// 参数配置
+// 实例化配置
 new WeValidator({
     rules: {},
     message: {},
@@ -271,6 +271,13 @@ new WeValidator({
         alert(data.msg)
     }
 })
+
+// 验证的时候配置 onMessage
+if(!obj.checkData(formData, (data) => {
+    alert(data.msg)
+})){
+     return
+}
 ```
 
 ## 协议

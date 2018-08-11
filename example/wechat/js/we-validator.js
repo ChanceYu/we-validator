@@ -98,7 +98,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * 简单判断是微信小程序还是支付宝小程序
+ * 环境检测：
+ * 微信小程序
+ * 支付宝小程序
+ * Nodejs
  */
 var isWxMini = typeof wx !== 'undefined' && !!wx.showToast;
 var isAliMini = typeof my !== 'undefined' && !!my.showToast;
@@ -135,8 +138,6 @@ var WeValidator = function () {
     _createClass(WeValidator, [{
         key: 'showErrorMessage',
         value: function showErrorMessage(data) {
-            data.value = data.param.splice(0, 1)[0];
-
             // 参数配置
             if (typeof this.options.onMessage === 'function') {
                 return this.options.onMessage(data);
@@ -208,7 +209,7 @@ var WeValidator = function () {
 
     }, {
         key: 'checkData',
-        value: function checkData(data) {
+        value: function checkData(data, onMessage) {
             var _rules_ = this.options.rules;
             var _messages_ = this.options.messages;
             var result = {};
@@ -252,13 +253,20 @@ var WeValidator = function () {
                         };
                     } else {
                         // 验证不通过
-                        if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                            this.showErrorMessage({
-                                name: attr,
-                                param: args,
-                                rule: ruleName,
-                                msg: _messages_[attr][ruleName]
-                            });
+                        var params = {
+                            name: attr,
+                            value: args.splice(0, 1)[0],
+                            param: args,
+                            rule: ruleName,
+                            msg: _messages_[attr] && _messages_[attr][ruleName]
+                        };
+
+                        if (typeof onMessage === 'function') {
+                            onMessage(params);
+                        } else {
+                            if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
+                                this.showErrorMessage(params);
+                            }
                         }
                         return false;
                     }

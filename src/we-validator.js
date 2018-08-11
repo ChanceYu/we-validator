@@ -47,8 +47,6 @@ class WeValidator {
      * 显示错误提示
      */
     showErrorMessage(data) {
-        data.value = data.param.splice(0,1)[0]
-
         // 参数配置
         if(typeof this.options.onMessage === 'function'){
             return this.options.onMessage(data)
@@ -111,7 +109,7 @@ class WeValidator {
     /**
      * 验证表单数据
      */
-    checkData(data) {
+    checkData(data, onMessage) {
         let _rules_ = this.options.rules;
         let _messages_ = this.options.messages;
         let result = {};
@@ -154,13 +152,20 @@ class WeValidator {
                     }
                 } else {
                     // 验证不通过
-                    if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                        this.showErrorMessage({
-                            name: attr,
-                            param: args,
-                            rule: ruleName,
-                            msg: _messages_[attr][ruleName]
-                        });
+                    let params = {
+                        name: attr,
+                        value: args.splice(0, 1)[0],
+                        param: args,
+                        rule: ruleName,
+                        msg: _messages_[attr] && _messages_[attr][ruleName]
+                    }
+
+                    if(typeof onMessage === 'function'){
+                        onMessage(params)
+                    }else{
+                        if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
+                            this.showErrorMessage(params);
+                        }
                     }
                     return false;
                 }
