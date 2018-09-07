@@ -46,22 +46,26 @@ class WeValidator {
     /**
      * 显示错误提示
      */
-    showErrorMessage(data) {
-        // 参数配置
-        if(typeof this.options.onMessage === 'function'){
-            return this.options.onMessage(data)
+    showErrorMessage(params, onMessage) {
+        // checkData(params, onMessage)
+        if(typeof onMessage === 'function'){
+            return onMessage(params)
         }
 
-        // 全局配置
+        // 参数配置 new WeValidator({ onMessage })
+        if(typeof this.options.onMessage === 'function'){
+            return this.options.onMessage(params)
+        }
+
+        // 全局配置 WeValidator.onMessage
         if(typeof WeValidator.onMessage === 'function'){
-            return WeValidator.onMessage(data)
+            return WeValidator.onMessage(params)
         }
         
-        // 默认配置
         // 微信小程序
         if(isWxMini) {
             return wx.showToast({
-                title: data.msg,
+                title: params.msg,
                 icon: 'none'
             })
         }
@@ -69,7 +73,7 @@ class WeValidator {
         // 支付宝小程序
         if(isAliMini){
             return my.showToast({
-                content: data.msg,
+                content: params.msg,
                 type: 'none'
             })
         }
@@ -78,7 +82,7 @@ class WeValidator {
         if(isNodeEnv) return
 
         // 普通浏览器
-        alert(data.msg)
+        alert(params.msg)
     }
 
     /**
@@ -160,12 +164,8 @@ class WeValidator {
                         msg: _messages_[attr] && _messages_[attr][ruleName]
                     }
 
-                    if(typeof onMessage === 'function'){
-                        onMessage(params)
-                    }else{
-                        if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                            this.showErrorMessage(params);
-                        }
+                    if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
+                        this.showErrorMessage(params, onMessage);
                     }
                     return false;
                 }

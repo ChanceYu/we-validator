@@ -1,6 +1,6 @@
 /*!
  * we-validator
- * version: 1.3.6
+ * version: 1.3.8
  * address: https://github.com/ChanceYu/we-validator#readme
  * author:  ChanceYu
  * license: MIT
@@ -137,22 +137,26 @@ var WeValidator = function () {
 
     _createClass(WeValidator, [{
         key: 'showErrorMessage',
-        value: function showErrorMessage(data) {
-            // 参数配置
+        value: function showErrorMessage(params, onMessage) {
+            // checkData(params, onMessage)
+            if (typeof onMessage === 'function') {
+                return onMessage(params);
+            }
+
+            // 参数配置 new WeValidator({ onMessage })
             if (typeof this.options.onMessage === 'function') {
-                return this.options.onMessage(data);
+                return this.options.onMessage(params);
             }
 
-            // 全局配置
+            // 全局配置 WeValidator.onMessage
             if (typeof WeValidator.onMessage === 'function') {
-                return WeValidator.onMessage(data);
+                return WeValidator.onMessage(params);
             }
 
-            // 默认配置
             // 微信小程序
             if (isWxMini) {
                 return wx.showToast({
-                    title: data.msg,
+                    title: params.msg,
                     icon: 'none'
                 });
             }
@@ -160,7 +164,7 @@ var WeValidator = function () {
             // 支付宝小程序
             if (isAliMini) {
                 return my.showToast({
-                    content: data.msg,
+                    content: params.msg,
                     type: 'none'
                 });
             }
@@ -169,7 +173,7 @@ var WeValidator = function () {
             if (isNodeEnv) return;
 
             // 普通浏览器
-            alert(data.msg);
+            alert(params.msg);
         }
 
         /**
@@ -261,12 +265,8 @@ var WeValidator = function () {
                             msg: _messages_[attr] && _messages_[attr][ruleName]
                         };
 
-                        if (typeof onMessage === 'function') {
-                            onMessage(params);
-                        } else {
-                            if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                                this.showErrorMessage(params);
-                            }
+                        if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
+                            this.showErrorMessage(params, onMessage);
                         }
                         return false;
                     }
