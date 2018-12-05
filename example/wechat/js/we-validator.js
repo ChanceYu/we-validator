@@ -1,6 +1,6 @@
 /*!
  * we-validator
- * version: 1.3.8
+ * version: 1.3.9
  * address: https://github.com/ChanceYu/we-validator#readme
  * author:  ChanceYu
  * license: MIT
@@ -504,7 +504,11 @@ var _loop = function _loop(attr) {
     if (!_rules2.default.hasOwnProperty(attr)) return 'continue';
 
     validator[attr] = function (str) {
-        return _rules2.default[attr].test(str);
+        if (validator.required(str)) {
+            return _rules2.default[attr].test(str);
+        } else {
+            return true;
+        }
     };
 };
 

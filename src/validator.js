@@ -161,7 +161,13 @@ validator.rules = rules
 for (let attr in rules) {
     if(!rules.hasOwnProperty(attr)) continue
 
-    validator[attr] = (str) => rules[attr].test(str)
+    validator[attr] = (str) => {
+      if(validator.required(str)){
+        return rules[attr].test(str)
+      }else{
+        return true
+      }
+    }
 }
 
 module.exports = validator
