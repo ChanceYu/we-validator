@@ -8,7 +8,7 @@ import validator from './validator'
  */
 const isWxMini = typeof wx !== 'undefined' && !!wx.showToast
 const isAliMini = typeof my !== 'undefined' && !!my.showToast
-const isNodeEnv = typeof module !== 'undefined' && module.exports
+const isBrowser = typeof window !== 'undefined' && !!window.alert
 
 class WeValidator {
 
@@ -25,7 +25,7 @@ class WeValidator {
     static $value = (name) => ((value, data) => data[name])
 
     /**
-     * 动态添加验证规则
+     * 动态添加验证规则（全局）
      * @param {String} ruleName 规则名称
      * @param {Function} method 规则验证函数
      */
@@ -78,11 +78,8 @@ class WeValidator {
             })
         }
 
-        // Nodejs 不做处理
-        if(isNodeEnv) return
-
-        // 普通浏览器
-        alert(params.msg)
+        // 浏览器端
+        if(isBrowser) alert(params.msg)
     }
 
     /**
@@ -93,6 +90,29 @@ class WeValidator {
             console.warn && console.warn(`没有此验证类型：${ruleName}，字段：${attr}`);
             return true
         }
+    }
+
+    /**
+     * 动态添加规则
+     */
+    addRules(options = {}) {
+      Object.assign(this.options.rules, options.rules);
+      Object.assign(this.options.messages, options.messages);
+
+      this.checkRules()
+    }
+
+    /**
+     * 动态删除规则
+     */
+    removeRules(rules) {
+      if(!(rules instanceof Array)) throw new Error('参数须为数组');
+      
+      for(let i = 0; i < rules.length; i++){
+        let key = rules[i];
+
+        delete this.options.rules[key];
+      }
     }
 
     /**
