@@ -48,7 +48,7 @@
         var submitForm = document.getElementById('submitForm');
         var submitButton = document.getElementById('submitButton');
         
-        var oValidator = new WeValidator({
+        var validatorInstance = new WeValidator({
             rules: {
                 username: {
                     required: true
@@ -93,7 +93,7 @@
             var data = getFormData();
 
             console.log(data)
-            if (!oValidator.checkData(data)) return;
+            if (!validatorInstance.checkData(data)) return;
 
             console.log('开始提交');
             

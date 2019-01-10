@@ -21,7 +21,7 @@ export default {
       let { value } = e.target;
 
       console.log(value);
-      if (!this.oValidator.checkData(value)) return;
+      if (!this.validatorInstance.checkData(value)) return;
 
       // 开始提交表单
       // wx.request
@@ -29,7 +29,7 @@ export default {
     },
 
     initValidator () {
-      this.oValidator = new WeValidator({
+      this.validatorInstance = new WeValidator({
         rules: {
           username: {
             required: true

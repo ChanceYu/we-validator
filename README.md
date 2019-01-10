@@ -23,7 +23,7 @@
 
 
 ## 安装
-非npm安装方式，直接引入lib目录下的we-validator.js到项目即可
+非 npm 安装方式，直接引入 lib 目录下的 `we-validator.js` 到项目即可
 ```bash
 npm install we-validator --save
 ```
@@ -52,14 +52,14 @@ Page({
     onSubmitForm(e){
         let { value } = e.detail
 
-        if(!this.oValidator.checkData(value)) return
+        if(!this.validatorInstance.checkData(value)) return
 
         // 开始提交表单
         // wx.request
     },
     initValidator(){
         // 实例化
-        this.oValidator = new WeValidator({
+        this.validatorInstance = new WeValidator({
             rules: {
                 username: {
                     required: true
@@ -107,7 +107,7 @@ Page({
 ## Static API
  - [WeValidator](#static-api)
     - [.addRule(ruleName, callback)](#wevalidatoraddrulerulename-callback) 添加自定义规则
-    - [.$value(ruleName)](#$wevalidatorvaluerulename) 获取字段值，值相同校验使用（例如：密码和确认密码）
+    - [.$value(ruleName)](#wevalidatorvaluerulename) 获取字段值，值相同校验使用（例如：密码和确认密码）
 
 ### new WeValidator(options) ⇒ <code>object</code>
 实例化
@@ -161,6 +161,38 @@ new WeValidator({
 动态添加校验
 
 `options` 参数和实例化 `new WeValidator(options)` 一样，[详情](#new-wevalidatoroptions--object)
+```javascript
+const WeValidator = require('we-validator')
+
+const validatorInstance = new WeValidator({
+    rules: {
+        username: {
+            required: true
+        }
+    },
+    messages: {
+        username: {
+            required: '请输入用户名'
+        }
+    }
+})
+
+// 动态添加校验
+validatorInstance.addRules({
+    rules: {
+        phoneno: {
+            required: true,
+            mobile: true
+        }
+    },
+    messages: {
+        phoneno: {
+            required: '请输入手机号',
+            mobile: '手机号格式不正确'
+        }
+    }
+})
+```
 
 ### .removeRules(rules)
 动态移除校验
@@ -170,7 +202,7 @@ new WeValidator({
 | rules | <code>Array</code> |  | 需要移除校验的表单字段 |
 
 ```javascript
-validatorInstance.removeRules(['username', 'age'])
+validatorInstance.removeRules(['username'])
 ```
 
 ### WeValidator.addRule(ruleName, callback)
