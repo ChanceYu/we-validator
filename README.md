@@ -15,9 +15,9 @@
 - 不依赖任何框架
 - 既支持原生微信小程序方式，也支持 mpvue、wepy等小程序框架使用
 - 支持web浏览器以及Nodejs端使用
-- [支持自定义规则](#自定义规则)
-- [支持动态添加或移除校验](#动态校验)
-- [支持实例化和直接调用验证函数两种使用方式](#直接调用验证函数)
+- [支持自定义规则](#wevalidatoraddrulerulename-callback)
+- [支持动态添加或移除校验](#addrulesoptions)
+- [支持实例化和直接调用验证函数两种使用方式](#动态传入参数的使用)
 - [支持自定义错误消息提示](#自定义错误消息提示)
 
 
@@ -98,16 +98,16 @@ Page({
 
 
 ## API
- - [new WeValidator(options)](#newwevalidatoroptions)
-    - [.checkData(data, onMessage)](#checkdatadata--onMessage) 校验数据
+ - [new WeValidator(options)](#new-wevalidatoroptions--object)
+    - [.checkData(data, onMessage)](#checkdatadata-onmessage--boolean) 校验数据
     - [.addRules(options)](#addrulesoptions) 动态添加校验
     - [.removeRules(rules)](#removerulesrules) 动态移除校验
 
 
 ## Static API
  - [WeValidator](#static-api)
-    - [.addRule(ruleName, callback)](#addrulerulename--callback) 添加自定义规则
-    - [.$value(ruleName)](#$valuerulename) 获取字段值，值相同校验使用（例如：密码和确认密码）
+    - [.addRule(ruleName, callback)](#wevalidatoraddrulerulename-callback) 添加自定义规则
+    - [.$value(ruleName)](#$wevalidatorvaluerulename) 获取字段值，值相同校验使用（例如：密码和确认密码）
 
 ### new WeValidator(options) ⇒ <code>object</code>
 实例化
@@ -160,7 +160,7 @@ new WeValidator({
 ### .addRules(options)
 动态添加校验
 
-`options` 参数和实例化 `new WeValidator(options)` 一样，[详情](#newwevalidatoroptions)
+`options` 参数和实例化 `new WeValidator(options)` 一样，[详情](#new-wevalidatoroptions--object)
 
 ### .removeRules(rules)
 动态移除校验
@@ -272,7 +272,7 @@ new WeValidator({
 
 - `required`: true，必填
 - `regex`: RegExp，正则通用校验
-- `equal`: WeValidator.$value(compareName)，字段值是否相同，例如二次密码校验，[参考](#值相同校验)
+- `equal`: WeValidator.$value(compareName)，字段值是否相同，例如二次密码校验，[参考](#wevalidatorvaluerulename)
 - `intGreater`: n，大于n的数字
 - `intLength`: n，只能输入n位的数字
 - `intLessLength`: n，至少n位数字
@@ -309,7 +309,7 @@ new WeValidator({
     }
 })
 
-// 使用方式二，调用函数（支持以上所有正则规则类型的函数调用）
+// 使用方式二，调用函数（支持默认提供的所有正则规则类型的函数调用）
 let b1 = WeValidator.intGreater('str', 6) // 大于6的数字
 let b2 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 ```
@@ -320,7 +320,7 @@ let b2 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
 ```javascript
 const WeValidator = require('we-validator')
 
-// 全局配置
+// 1、全局配置
 WeValidator.onMessage = function(data){
     /*
     data 参数
@@ -333,7 +333,7 @@ WeValidator.onMessage = function(data){
     */
 }
 
-// 实例化配置
+// 2、实例化配置
 new WeValidator({
     rules: {},
     message: {},
@@ -342,10 +342,11 @@ new WeValidator({
     }
 })
 
-// 验证的时候配置 onMessage
-if(!obj.checkData(formData, (data) => {
-    alert(data.msg)
-})){
+// 3、验证的时候配置 onMessage（nodejs端校验可以使用此方式）
+function onMessage(data){
+  alert(data.msg)
+}
+if(!obj.checkData(formData, onMessage)){
      return
 }
 ```
