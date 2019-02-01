@@ -133,10 +133,9 @@ class WeValidator {
     /**
      * 验证表单数据
      */
-    checkData(data, onMessage) {
+    checkData(data, onMessage, showMessage = true) {
         let _rules_ = this.options.rules;
         let _messages_ = this.options.messages;
-        let result = {};
 
         // 遍历字段
         for (let attr in _rules_) {
@@ -168,31 +167,31 @@ class WeValidator {
                         break;
                 }
 
-                if (validator[ruleName].apply(validator, args)) {
-                    // 验证通过
-                    result[attr] = {
-                        name: attr,
-                        value: value
-                    }
-                } else {
-                    // 验证不通过
-                    let params = {
-                        name: attr,
-                        value: args.splice(0, 1)[0],
-                        param: args,
-                        rule: ruleName,
-                        msg: _messages_[attr] && _messages_[attr][ruleName]
-                    }
-
-                    if (_messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                        this.showErrorMessage(params, onMessage);
-                    }
-                    return false;
+                if (!validator[ruleName].apply(validator, args)) {
+                  // 验证不通过
+                  if (showMessage && _messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
+                      let params = {
+                          name: attr,
+                          value: args.splice(0, 1)[0],
+                          param: args,
+                          rule: ruleName,
+                          msg: _messages_[attr][ruleName]
+                      }
+                      this.showErrorMessage(params, onMessage);
+                  }
+                  return false;
                 }
             }
         }
 
-        return result;
+        return true;
+    }
+
+    /**
+     * 校验数据是否有效，不提示
+     */
+    isValid(data) {
+      return this.checkData(data, null, false)
     }
 
 }

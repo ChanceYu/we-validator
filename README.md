@@ -100,6 +100,7 @@ Page({
 ## API
  - [new WeValidator(options)](#new-wevalidatoroptions--object)
     - [.checkData(data, onMessage)](#checkdatadata-onmessage--boolean) 校验数据
+    - [.isValid(data)](#isvaliddata--boolean) 校验数据是否有效，仅校验无提示
     - [.addRules(options)](#addrulesoptions) 动态添加校验
     - [.removeRules(rules)](#removerulesrules) 动态移除校验
 
@@ -156,6 +157,15 @@ new WeValidator({
 | --- | --- | --- | --- |
 | data | <code>object</code> |  | 需要校验的表单数据 |
 | onMessage | <code>function</code> |  | 自定义错误消息提示，[详情](#自定义错误消息提示) |
+
+### .isValid(data) ⇒ <code>boolean</code>
+校验数据是否有效，无提示
+
+**返回**: <code>boolean</code>
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| data | <code>object</code> |  | 需要校验的表单数据 |
 
 ### .addRules(options)
 动态添加校验
