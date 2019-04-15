@@ -23,6 +23,12 @@
             width: 100%;
         }
 
+        p{
+          color: red;
+          font-size: 12px;
+          margin-bottom: 20px;
+        }
+
         button{
             padding: 10px 0;
             width: 100%;
@@ -33,10 +39,19 @@
 <body>
     <form id="submitForm">
         <input type="text" name="username" placeholder="用户名" />
+        <p id="username"></p>
+        
         <input type="password" name="pwd1" placeholder="密码" />
+        <p id="pwd1"></p>
+
         <input type="password" name="pwd2" placeholder="确认密码" />
+        <p id="pwd2"></p>
+
         <input type="number" name="phoneno" placeholder="手机号" />
+        <p id="phoneno"></p>
+
         <input type="text" name="str" placeholder="长度为3的字符串" />
+        <p id="str"></p>
 
         <button id="submitButton" type="button">提交</button>
     </form>
@@ -49,6 +64,18 @@
         var submitButton = document.getElementById('submitButton');
         
         var validatorInstance = new WeValidator({
+            multiCheck: true,
+            onMessage: function(data){
+              console.log(data);
+              
+              for(var name in data){
+                let ele = document.getElementById(name)
+
+                if(ele){
+                  ele.innerHTML = data[name].msg
+                }
+              }
+            },
             rules: {
                 username: {
                     required: true

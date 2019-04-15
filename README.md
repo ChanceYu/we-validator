@@ -121,6 +121,7 @@ Page({
 | [options.rules] | <code>object</code> |  | 验证字段的规则 |
 | [options.messages] | <code>object</code> |  | 验证字段错误的提示信息 |
 | [options.onMessages] | <code>function</code> |  | 错误提示显示方式，默认会自动检测环境。小程序默认使用`showToast`，普通web浏览器默认使用`alert`，Nodejs端不做处理建议自己配置，[详情](#自定义错误消息提示) |
+| [options.multiCheck] | <code>boolean</code> | `false` | 需要一次校验多个字段并显示错误信息时使用，[详情](#多个字段校验并显示错误) |
 
 #### 示例
 ```javascript
@@ -391,6 +392,40 @@ function onMessage(data){
 if(!obj.checkData(formData, onMessage)){
      return
 }
+```
+
+#### 多个字段校验并显示错误
+显示如下，**注意：当`multiCheck`为`true`时，建议使用自定义`onMessage`**
+
+![we-validator](./assets/demo_multi.png)
+
+```javascript
+var validatorInstance = new WeValidator({
+  multiCheck: true,
+  onMessage: function(data){
+    console.log(data);
+    
+    // 根据自己的项目去处理
+  },
+  rules: {
+      username: {
+          required: true
+      },
+      phoneno: {
+          required: true,
+          mobile: true
+      }
+  },
+  messages: {
+      username: {
+          required: '请输入用户名'
+      },
+      phoneno: {
+          required: '请输入手机号',
+          mobile: '手机号格式不正确'
+      }
+  }
+});
 ```
 
 ## 协议

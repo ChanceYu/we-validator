@@ -15,6 +15,7 @@ class WeValidator {
     static defaultOptions = {
         rules: {},
         messages: {},
+        multiCheck: false, // 是否一次验证多个
         onMessage: null
     }
 
@@ -47,7 +48,6 @@ class WeValidator {
      * 显示错误提示
      */
     showErrorMessage(params, onMessage) {
-        // checkData(params, onMessage)
         if(typeof onMessage === 'function'){
             return onMessage(params)
         }
@@ -136,6 +136,9 @@ class WeValidator {
     checkData(data, onMessage, showMessage = true) {
         let _rules_ = this.options.rules;
         let _messages_ = this.options.messages;
+        let multiCheck = this.options.multiCheck;
+        let hasError = false
+        let errorData = {}
 
         // 遍历字段
         for (let attr in _rules_) {
@@ -177,11 +180,21 @@ class WeValidator {
                           rule: ruleName,
                           msg: _messages_[attr][ruleName]
                       }
-                      this.showErrorMessage(params, onMessage);
+                      errorData[attr] = params
+
+                      if(!multiCheck) this.showErrorMessage(params, onMessage);
                   }
-                  return false;
+                  hasError = true
+                  if(!multiCheck) return false;
                 }
             }
+        }
+
+        if(hasError){
+          if(multiCheck){
+            this.showErrorMessage(errorData, onMessage);
+          }
+          return false;
         }
 
         return true;
