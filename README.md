@@ -1,7 +1,7 @@
 # we-validator
-简单灵活的表单验证插件
+> v1 版本
 
-[![NPM][img-npm]][url-npm]
+简单灵活的表单验证插件
 
 [![Build Status][img-travis]][url-travis]
 [![Language][img-javascript]][url-github]
