@@ -4,18 +4,20 @@ const WeValidator = require('../lib/we-validator')
 describe('testing: we-validator package', () => {
 
     it('testing: rules', () => {
-        expect(WeValidator.required('a')).to.be.ok
-        expect(WeValidator.required('')).to.not.be.ok
-        expect(WeValidator.chinese('好的')).to.be.ok
-        expect(WeValidator.chinese('a')).to.not.be.ok
+        expect(WeValidator.checkField('required', 'a')).to.be.ok
+        expect(WeValidator.checkField('required', '')).to.not.be.ok
+        expect(WeValidator.checkField('chinese', '好的')).to.be.ok
+        expect(WeValidator.checkField('chinese', 'a')).to.not.be.ok
     })
 
     it('testing: addRule', () => {
-        WeValidator.addRule('theRuleName', function(value, param){
-            return /\d/.test(value)
+        WeValidator.addRule('theRuleName', {
+          rule(value){
+            return !this.required(value) || /\d/.test(value)
+          }
         })
-        expect(WeValidator.theRuleName('1')).to.be.ok
-        expect(WeValidator.theRuleName('a')).to.not.be.ok
+        expect(WeValidator.checkField('theRuleName', '1')).to.be.ok
+        expect(WeValidator.checkField('theRuleName', 'a')).to.not.be.ok
     })
 
     it('testing: onMessage global', () => {

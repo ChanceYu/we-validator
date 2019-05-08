@@ -41,16 +41,16 @@
         <input type="text" name="username" placeholder="用户名" />
         <p id="username"></p>
         
-        <input type="password" name="pwd1" placeholder="密码" />
-        <p id="pwd1"></p>
+        <input type="password" name="pwd" placeholder="密码" />
+        <p id="pwd"></p>
 
-        <input type="password" name="pwd2" placeholder="确认密码" />
-        <p id="pwd2"></p>
+        <input type="password" name="repeatPwd" placeholder="确认密码" />
+        <p id="repeatPwd"></p>
 
         <input type="number" name="phoneno" placeholder="手机号" />
         <p id="phoneno"></p>
 
-        <input type="text" name="str" placeholder="长度为3的字符串" />
+        <input type="text" name="str" placeholder="中文 1-4 位" />
         <p id="str"></p>
 
         <button id="submitButton" type="button">提交</button>
@@ -80,38 +80,35 @@
                 username: {
                     required: true
                 },
-                pwd1: {
+                pwd: {
                     required: true
                 },
-                pwd2: {
+                repeatPwd: {
                     required: true,
-                    equal: WeValidator.$value('pwd1')
+                    equalTo: 'pwd'
                 },
                 phoneno: {
                     required: true,
                     mobile: true
                 },
                 str: {
-                    stringLength: 3
+                    rangeChinese: [1,4]
                 }
             },
             messages: {
                 username: {
                     required: '请输入用户名'
                 },
-                pwd1: {
+                pwd: {
                     required: '请输入密码'
                 },
-                pwd2: {
+                repeatPwd: {
                     required: '请输入确认密码',
-                    equal: '两次密码不一致'
+                    equalTo: '两次密码不一致'
                 },
                 phoneno: {
                     required: '请输入手机号',
                     mobile: '手机号格式不正确'
-                },
-                str: {
-                    stringLength: '字符串长度不对'
                 }
             }
         });
@@ -120,6 +117,7 @@
             var data = getFormData();
 
             console.log(data)
+            clearError()
             if (!validatorInstance.checkData(data)) return;
 
             console.log('开始提交');
@@ -143,6 +141,16 @@
             }
 
             return data
+        }
+
+        function clearError(){
+          var eles = document.querySelectorAll('p')
+
+          eles = [].slice.call(eles)
+
+          for(var i = 0; i < eles.length; i++){
+            eles[i].innerHTML = ''
+          }
         }
     </script>
 </body>

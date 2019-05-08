@@ -1,24 +1,30 @@
-# we-validator
-简单灵活的表单验证插件
+<div align="center">
+  <img width="400" src="assets/v2.png" alt="we-validator" />
+  <br>
 
-[![NPM][img-npm]][url-npm]
+  <p><a href="https://www.npmjs.com/package/we-validator"><img src="https://nodei.co/npm/we-validator.png?compact=true" /></a></p>
 
-[![Build Status][img-travis]][url-travis]
-[![Language][img-javascript]][url-github]
-[![License][img-mit]][url-mit]
+  <a href="https://travis-ci.org/ChanceYu/we-validator"><img src="https://travis-ci.org/ChanceYu/we-validator.svg?branch=master" /></a>
+  <a href="javascript:;"><img src="https://img.shields.io/badge/language-JavaScript-brightgreen.svg" /></a>
+  <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
 
-支持微信小程序、支付宝小程序、浏览器以及Nodejs端使用。
+</div>
+
+> v2 和 v1 版本差别较大，如果要使用老版本，可以查看 [v1 版本](https://github.com/ChanceYu/we-validator/tree/v1)。
+
+简单灵活的表单验证插件，支持小程序、浏览器、Nodejs。小程序端支持：微信、支付宝、百度智能、今日头条，小程序默认提示使用 `showToast`。
 
 ## 特点
 
 - 使用简单灵活
 - 不依赖任何框架
-- 既支持原生微信小程序方式，也支持 mpvue、wepy等小程序框架使用
+- 既支持原生小程序方式，也支持 mpvue、wepy等小程序框架使用
 - 支持web浏览器以及Nodejs端使用
 - [支持自定义规则](#wevalidatoraddrulerulename-callback)
 - [支持动态添加或移除校验](#addrulesoptions)
-- [支持实例化和直接调用验证函数两种使用方式](#动态传入参数的使用)
+- 支持[实例化](#实例化)和[单独校验某个字段](#单独校验某个字段)两种使用方式
 - [支持自定义错误消息提示](#自定义错误消息提示)
+- [支持多个字段同时校验并显示错误](#多个字段同时校验并显示错误)
 
 
 
@@ -69,8 +75,7 @@ Page({
                     mobile: true
                 },
                 str: {
-                    required: true,
-                    stringLength: 3
+                    length: 3
                 },
             },
             messages: {
@@ -82,8 +87,7 @@ Page({
                     mobile: '手机号格式不正确'
                 },
                 str: {
-                    required: '请输入字符串',
-                    stringLength: '字符串长度不对'
+                    length: '请输入长度为3的字符串'
                 },
             },
         })
@@ -99,7 +103,7 @@ Page({
 
 ## API
  - [new WeValidator(options)](#new-wevalidatoroptions--object)
-    - [.checkData(data, onMessage)](#checkdatadata-onmessage--boolean) 校验数据
+    - [.checkData(data, onMessage)](#checkdatadata-onmessage--boolean) 校验数据，会显示错误提示信息
     - [.isValid(data)](#isvaliddata--boolean) 校验数据是否有效，仅校验无提示
     - [.addRules(options)](#addrulesoptions) 动态添加校验
     - [.removeRules(rules)](#removerulesrules) 动态移除校验
@@ -108,7 +112,41 @@ Page({
 ## Static API
  - [WeValidator](#static-api)
     - [.addRule(ruleName, callback)](#wevalidatoraddrulerulename-callback) 添加自定义规则
-    - [.$value(ruleName)](#wevalidatorvaluerulename) 获取字段值，值相同校验使用（例如：密码和确认密码）
+    - [.checkField(ruleName, value, param)](#单独校验某个字段) 校验单个字段
+    - [.onMessage](#自定义错误消息提示) 设置全局错误提示
+
+
+## 默认支持的规则
+
+具体规则内容可查看[源码](./src/rules.js)
+
+| 规则 | 描述 | 默认提示 |
+| --- | --- | --- |
+| `required: true` | 必填 | 此字段必填 |
+| `regex: /^\d+$/` | 正则通用 | 不符合此验证规则 |
+| `email: true` | 电子邮件格式 | 请输入有效的电子邮件地址 |
+| `mobile: true` | 11位手机号 | 请输入11位的手机号码 |
+| `tel: true` | 座机号<br>例如：010-1234567、0551-1234567 | 请输入座机号 |
+| `url: true` | URL网址 | 请输入有效的网址 |
+| `idcard: true` | 身份证号 | 请输入18位的有效身份证 |
+| `equalTo: 'field'` | 值相同校验<br>例如：密码和确认密码 `equalTo: 'pwd1'` | 输入值必须和 `field` 相同 |
+| `contains: 'str'` | 是否包含某字符 | 输入值必须包含 `str` |
+| `length: 5` | 长度为多少的字符串 | 请输入 `5` 个字符 |
+| `minlength: 2` | 最少多长的字符串 | 最少要输入 `2` 个字符 |
+| `maxlength: 6` | 最多多长的字符串 | 最多可以输入 `6` 个字符 |
+| `rangelength: [2, 6]` | 某个范围长度的字符串 | 请输入长度在 `2` 到 `6` 之间的字符 |
+| `number: true` | 数字 | 请输入有效的数字 |
+| `digits: true` | 整数数字 | 只能输入整数数字 |
+| `min: 3` | 大于多少的数字<br>（最小只能多少） | 请输入大于 `3` 的数字 |
+| `max: 9` | 小于多少的数字<br>（最大只能多少） | 请输入小于 `9` 的数字 |
+| `range: [3, 9]` | 大于且小于多少的数字 | 请输入大于 `3` 且小于 `9` 的数字 |
+| `chinese: true` | 中文字符 | 只能输入中文字符 |
+| `minChinese: 3` | 最少多少个中文字符 | 最少输入 `3` 个中文字符 |
+| `maxChinese: 9` | 最多多少个中文字符 | 最多输入 `9` 个中文字符 |
+| `rangeChinese: [3, 9]` | 大于且小于多少个中文字符 | 只能输入 `3` 到 `9` 个中文字符 |
+| `date: true` | 日期（默认使用 `new Date(value)` 校验） | 请输入有效的日期 |
+| `dateISO: true` | 日期（ISO标准格式）<br>例如：2019-09-19，2019/09/19 | 请输入有效的日期（ISO标准格式） |
+
 
 ### new WeValidator(options) ⇒ <code>object</code>
 实例化
@@ -121,7 +159,7 @@ Page({
 | [options.rules] | <code>object</code> |  | 验证字段的规则 |
 | [options.messages] | <code>object</code> |  | 验证字段错误的提示信息 |
 | [options.onMessages] | <code>function</code> |  | 错误提示显示方式，默认会自动检测环境。小程序默认使用`showToast`，普通web浏览器默认使用`alert`，Nodejs端不做处理建议自己配置，[详情](#自定义错误消息提示) |
-| [options.multiCheck] | <code>boolean</code> | `false` | 需要一次校验多个字段并显示错误信息时使用，[详情](#多个字段校验并显示错误) |
+| [options.multiCheck] | <code>boolean</code> | `false` | 需要一次校验多个字段并显示错误信息时使用，[详情](#多个字段同时校验并显示错误) |
 
 #### 示例
 ```javascript
@@ -228,8 +266,11 @@ validatorInstance.removeRules(['username'])
 const WeValidator = require('we-validator')
 
 // 添加自定义规则
-WeValidator.addRule('theRuleName', function(value, param){
-    return /\d/.test(value)
+WeValidator.addRule('theRuleName', {
+  message: '规则错误提示文字',
+  rule(value, param){
+    return !this.required(value) || /\d/.test(value)
+  }
 })
 
 // 使用方式一，实例化
@@ -247,114 +288,44 @@ new WeValidator({
 })
 
 // 使用方式二，调用函数
-WeValidator.theRuleName('str')
+WeValidator.checkField('theRuleName', 'str')
 ```
 
-
-### WeValidator.$value(ruleName)
-静态方法：值相同校验，例如二次密码校验
-
-| 参数 | 类型 | 默认值 | 描述 |
-| --- | --- | --- | --- |
-| ruleName | <code>string</code> |  | 要比较的字段名称 |
-
-```javascript
-const WeValidator = require('we-validator')
-
-// 实例化
-new WeValidator({
-    rules: {
-        pwd1: {
-            required: true
-        },
-        pwd2: {
-            required: true,
-            equal: WeValidator.$value('pwd1')
-        }
-    },
-    messages: {
-        pwd1: {
-            required: '请输入密码'
-        },
-        pwd2: {
-            required: '请输入确认密码',
-            equal: '两次密码不一致'
-        }
-    }
-})
-```
-
-## 支持的正则类型
-
-具体正则内容可查看[源码](./src/rules.js)
-- `bankCard` - 银行卡
-- `mobile` -  手机号
-- `mobileWithSpace` -  手机号（带空格`131 2233 4455`）
-- `idCard` -  身份证
-- `chinese` -  中文
-- `chinese2to8` -  中文（2-8位）
-- `intOrFloat` -  整数或小数
-- `int` -  整数
-- `noZeroStart` -  非零开头的数字
-- `specialStr` -  含有^%&',;=?$\"等特殊字符
-- `email` -  邮箱
-- `httpUrl` -  InternetURL地址
-- `tel` -  电话号码,正确格式为："XXX-XXXXXXX"、"XXXX-XXXXXXXX"、"XXX-XXXXXXX"、"XXX-XXXXXXXX"、"XXXXXXX"和"XXXXXXXX"
-- `money` -  货币
-- `month` -  一年的12月，正确格式为："01"～"09"和"1"～"12"
-- `day` -  一个月的31天,正确格式为；"01"～"09"和"1"～"31"
-- `html` -  匹配html标签
-- `spaceEnter` -  匹配空行
-- `qq` -   qq号码
-- `zip` -  邮编
-- `doubleByte` -  匹配双字节字符(包括汉字在内)
-
-## 规则
-
-除了支持以上所有正则规则，以下特殊规则也支持，可动态传参（上面正则和下面特殊规则的使用方式一样）
-
-- `required`: true，必填
-- `regex`: RegExp，正则通用校验
-- `equal`: WeValidator.$value(compareName)，字段值是否相同，例如二次密码校验，[参考](#wevalidatorvaluerulename)
-- `intGreater`: n，大于n的数字
-- `intLength`: n，只能输入n位的数字
-- `intLessLength`: n，至少n位数字
-- `intLengthRange`: [n, m]，n到m位数字
-- `decimalLength`: n，只能输入有n位小数的正实数
-- `decimalLengthRange`: [n, m]，只能输入有n~m位小数的正实数
-- `stringLength`: n，长度为n的字符串
-- `stringLetter`: aorA，由26个英文字母组成的字符串，大写或小写类型，A表示大写，a表示小写，其它表示不限制大小写
-- `stringLetterDefault`: true，由数字、26个英文字母或者下划线组成的字符串
 
 ## 其它
-#### 动态传入参数的使用
+#### 实例化
 
 ```javascript
-const WeValidator = require('we-validator')
-
 // 使用方式一，实例化（推荐）
 new WeValidator({
     rules: {
         field1: {
-            intGreater: 6 // 大于6的数字
+            min: 6 // 不能小于6的数字
         },
         field2: {
-            intLengthRange: [2, 5] // 2-5位数字
+            range: [2, 5] // 大于2小于5的数字
         }
     },
     messages: {
         field1: {
-            intGreater: '请输入大于6的数字'
+            min: '请输入大于6的数字'
         },
         field2: {
-            intLengthRange: '请输入2-5位数字'
+            range: '请输入大于2小于5的数字'
         }
     }
 })
+```
 
-// 使用方式二，调用函数（支持默认提供的所有正则规则类型的函数调用）
-let b1 = WeValidator.intGreater('str', 6) // 大于6的数字
-let b2 = WeValidator.intLengthRange('str', 2, 5) // 2-5位数字
+#### 单独校验某个字段
+支持默认提供的所有正则规则类型的函数调用
+
+```javascript
+// 使用方式二，调用函数
+// WeValidator.checkField(ruleName, value, param)
+
+let b1 = WeValidator.checkField('min', 'str', 6) // 不能小于6的数字
+let b2 = WeValidator.checkField('range', 'str', [2, 5]) // 大于2小于5的数字
 ```
 
 #### 自定义错误消息提示
@@ -371,7 +342,7 @@ WeValidator.onMessage = function(data){
         msg, // 提示文字
         name, // 表单控件的 name
         value, // 表单控件的值
-        param // rules 验证字段传递的参数 []
+        param // rules 验证字段传递的参数
     }
     */
 }
@@ -394,7 +365,7 @@ if(!obj.checkData(formData, onMessage)){
 }
 ```
 
-#### 多个字段校验并显示错误
+#### 多个字段同时校验并显示错误
 显示如下，**注意：当`multiCheck`为`true`时，建议使用自定义`onMessage`**
 
 ![we-validator](./assets/demo_multi.png)

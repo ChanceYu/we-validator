@@ -1,65 +1,182 @@
-module.exports = {
-    // 银行卡
-    bankCard: /^(\d{16,19})$/,
+module.exports = (WeValidator) => {
 
-    // 手机号（数字）
-    mobile: /^1\d{10}$/,
+  // 必填
+  WeValidator.addRule('required', {
+    message: '此字段必填',
+    rule(value){
+      if(typeof value === 'number'){
+        value = value.toString()
+      }else if(typeof value === 'boolean'){
+        return true
+      }
+      return value && value.length > 0
+    }
+  })
 
-    // 手机号（带空格`131 2233 4455`）
-    mobileWithSpace: /^1\d{2}\s?\d{4}\s?\d{4}$/,
+  // 正则通用
+  WeValidator.addRule('regex', {
+    message: '不符合此验证规则',
+    rule(value, param){
+      return !this.required(value) || param.test(value)
+    }
+  })
 
-    // 身份证
-    idCard: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|x|X)$)/,
+  // 电子邮件
+  WeValidator.addRule('email', {
+    message: '请输入有效的电子邮件地址',
+    rule: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+  })
 
-    // 中文
-    chinese: /^[\u4e00-\u9fa5]{0,}$/,
+  // 手机号码
+  WeValidator.addRule('mobile', {
+    message: '请输入11位的手机号码',
+    rule: /^1[345789]\d{9}$/
+  })
 
-    // 中文（2-8位）
-    chinese2to8: /^[\u4e00-\u9fa5\uF900-\uFA2D]{2,8}$/,
+  // 座机号，例如：010-1234567、0551-1234567
+  WeValidator.addRule('tel', {
+    message: '请输入座机号',
+    rule: /^(\d{3,4}-)?\d{7,8}$/
+  })
 
+  // URL网址
+  WeValidator.addRule('url', {
+    message: '请输入有效的网址',
+    rule: /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
+  })
 
-    // 整数或小数
-    intOrFloat: /^[0-9]+\.{0,1}[0-9]{0,2}$/,
+  // 身份证号
+  WeValidator.addRule('idcard', {
+    message: '请输入18位的有效身份证',
+    rule: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+  })
 
-    // 整数
-    int: /^[0-9]*$/,
+  // 值相同校验（例如：密码和确认密码）
+  WeValidator.addRule('equalTo', {
+    message: '输入值必须和 {0} 相同',
+    rule(value, param){
+      return !this.required(value) || value === this.data[param]
+    }
+  })
 
-    // 非零开头的数字
-    noZeroStart: /^([1-9][0-9]*)$/,
+  // 是否包含某字符
+  WeValidator.addRule('contains', {
+    message: '输入值必须包含 {0}',
+    rule(value, param){
+      return !this.required(value) || value.indexOf(param) > -1
+    }
+  })
 
-    // 含有^%&',;=?$\"等特殊字符
-    specialStr: /[^%&',;=?$\x22]+/,
+  // 长度为多少的字符串
+  WeValidator.addRule('length', {
+    message: '请输入 {0} 个字符',
+    rule(value, param){
+      return !this.required(value) || value.length == param
+    }
+  })
 
-    // 邮箱
-    email: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+  // 最少多长的字符串
+  WeValidator.addRule('minlength', {
+    message: '最少要输入 {0} 个字符',
+    rule(value, param){
+      return !this.required(value) || value.length >= param
+    }
+  })
 
-    // InternetURL地址
-    httpUrl: /^http:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/,
+  // 最多多长的字符串
+  WeValidator.addRule('maxlength', {
+    message: '最多可以输入 {0} 个字符',
+    rule(value, param){
+      return !this.required(value) || value.length <= param
+    }
+  })
 
-    // 电话号码,正确格式为："XXX-XXXXXXX"、"XXXX-XXXXXXXX"、"XXX-XXXXXXX"、"XXX-XXXXXXXX"、"XXXXXXX"和"XXXXXXXX"
-    tel: /^((\d{3,4}-)|\d{3.4}-)?\d{7,8}$/,
+  // 某个范围长度的字符串
+  WeValidator.addRule('rangelength', {
+    message: '请输入长度在 {0} 到 {1} 之间的字符',
+    rule(value, param){
+      return !this.required(value) || (value.length >= param[0] && value.length <= param[1])
+    }
+  })
 
-    // 货币校验
-    money: /^\d+\.\d{2}$/,
+  // 数字
+  WeValidator.addRule('number', {
+    message: '请输入有效的数字',
+    rule: /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/
+  })
 
-    // 一年的12月，正确格式为："01"～"09"和"1"～"12"
-    month: /^(0?[1-9]|1[0-2])$/,
+  // 整数数字
+  WeValidator.addRule('digits', {
+    message: '只能输入整数数字',
+    rule: /^\d+$/
+  })
 
-    // 一个月的31天,正确格式为；"01"～"09"和"1"～"31"。
-    day: /^((0?[1-9])|((1|2)[0-9])|30|31)$/,
+  // 不小于多少的数字
+  WeValidator.addRule('min', {
+    message: '请输入不小于 {0} 的数字',
+    rule(value, param){
+      return !this.required(value) || value >= param
+    }
+  })
 
-    // 匹配html标签的正则表达式
-    html: /<(.*)>(.*)<\/(.*)>|<(.*)\/>/,
+  // 不能大于多少的数字
+  WeValidator.addRule('max', {
+    message: '请输入不大于 {0} 的数字',
+    rule(value, param){
+      return !this.required(value) || value <= param
+    }
+  })
 
-    // 匹配空行的正则表达式
-    spaceEnter: /\n[\s| ]*\r/,
+  // 大于且小于多少的数字
+  WeValidator.addRule('range', {
+    message: '请输入大于 {0} 且小于 {1} 的数字',
+    rule(value, param){
+      return !this.required(value) || (value >= param[0] && value <= param[1])
+    }
+  })
 
-    // qq号码
-    qq: /^[1-9][0-9]{4,}$/,
+  // 中文字符
+  WeValidator.addRule('chinese', {
+    message: '只能输入中文字符',
+    rule: /^[\u4e00-\u9fa5]{0,}$/
+  })
 
-    // 邮编
-    zip: /^[\d]{6}/,
+  // 最少多少个中文字符
+  WeValidator.addRule('minChinese', {
+    message: '最少输入 {0} 个中文字符',
+    rule(value, param){
+      return !this.required(value) || (new RegExp(`^[\u4e00-\u9fa5]{${param},}$`).test(value))
+    }
+  })
 
-    // 匹配双字节字符(包括汉字在内)
-    doubleByte: /[^\x00-\xff]/
+  // 最多多少个中文字符
+  WeValidator.addRule('maxChinese', {
+    message: '最多输入 {0} 个中文字符',
+    rule(value, param){
+      return !this.required(value) || (new RegExp(`^[\u4e00-\u9fa5]{0,${param}}$`).test(value))
+    }
+  })
+
+  // 大于且小于多少个中文字符
+  WeValidator.addRule('rangeChinese', {
+    message: '只能输入 {0} 到 {1} 个中文字符',
+    rule(value, param){
+      return !this.required(value) || (new RegExp(`^[\u4e00-\u9fa5]{${param[0]},${param[1]}}$`).test(value))
+    }
+  })
+
+  // 日期
+  WeValidator.addRule('date', {
+    message: '请输入有效的日期',
+    rule(value){
+      return !this.required(value) || !/Invalid|NaN/.test(new Date(value).toString())
+    }
+  })
+
+  // 日期（ISO标准格式）例如：2019-09-19，2019/09/19
+  WeValidator.addRule('dateISO', {
+    message: '请输入有效的日期（ISO标准格式）',
+    rule: /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/
+  })
+
 }

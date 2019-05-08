@@ -1,16 +1,29 @@
-import validator from './validator'
+import validatorRules from './rules'
 
 /**
  * 环境检测：
- * 微信小程序
- * 支付宝小程序
- * Nodejs
  */
-const isWxMini = typeof wx !== 'undefined' && !!wx.showToast
-const isAliMini = typeof my !== 'undefined' && !!my.showToast
-const isBrowser = typeof window !== 'undefined' && !!window.alert
+const isWx = typeof wx !== 'undefined' && !!wx.showToast // 微信小程序
+const isMy = typeof my !== 'undefined' && !!my.showToast // 支付宝小程序
+const isSwan = typeof swan !== 'undefined' && !!swan.showToast // 百度智能小程序
+const isTt = typeof tt !== 'undefined' && !!tt.showToast // 头条小程序
+const isBrowser = typeof window !== 'undefined' && !!window.alert  // 普通浏览器
+
+
+const objString = Object.prototype.toString
+
+const isArray = Array.isArray || ((v) => objString.call(v) === '[object Array]')
+const isFunction = (v) => (objString.call(v) === '[object Function]')
+const isRegExp = (v) => (objString.call(v) === '[object RegExp]')
 
 class WeValidator {
+
+    constructor(options = {}) {
+        this.options = Object.assign({}, WeValidator.defaultOptions, options)
+
+        this.required = WeValidator.RULES.required.rule
+        this._checkAllRules()
+    }
 
     static defaultOptions = {
         rules: {},
@@ -19,51 +32,53 @@ class WeValidator {
         onMessage: null
     }
 
-    /**
-     * 获取字段值
-     * @param {String} name 字段名称
-     */
-    static $value = (name) => ((value, data) => data[name])
+    // 所有校验规则
+    static RULES = {}
 
     /**
      * 动态添加验证规则（全局）
      * @param {String} ruleName 规则名称
-     * @param {Function} method 规则验证函数
+     * @param {RegExp|Function} ruleValue 验证规则
      */
-    static addRule = (ruleName, method) => {
-        if(validator.hasOwnProperty(ruleName) || typeof method !== 'function') return
-        
-        validator[ruleName] = (value, ...param) => method.call(validator, value, param)
-
-        WeValidator[ruleName] = validator[ruleName]
+    static addRule = function (ruleName, ruleValue) {
+        WeValidator.RULES[ruleName] = ruleValue
     }
 
-    constructor(options = {}) {
-        this.options = Object.assign({}, WeValidator.defaultOptions, options);
+    /**
+     * 验证单个字段数据
+     */
+    static checkField = function (ruleName, value, param){
+      let rule = WeValidator.RULES[ruleName].rule
 
-        this.checkRules()
+      if(isRegExp(rule)){
+        return !this.required(value) || rule.test(value)
+      }
+
+      if(isFunction(rule)){
+        return rule.call(this, value, param)
+      }
     }
 
     /**
      * 显示错误提示
      */
-    showErrorMessage(params, onMessage) {
-        if(typeof onMessage === 'function'){
+    _showErrorMessage(params, onMessage) {
+        if(isFunction(onMessage)){
             return onMessage(params)
         }
 
-        // 参数配置 new WeValidator({ onMessage })
-        if(typeof this.options.onMessage === 'function'){
+        // 参数形式 new WeValidator({ onMessage })
+        if(isFunction(this.options.onMessage)){
             return this.options.onMessage(params)
         }
 
         // 全局配置 WeValidator.onMessage
-        if(typeof WeValidator.onMessage === 'function'){
+        if(isFunction(WeValidator.onMessage)){
             return WeValidator.onMessage(params)
         }
         
         // 微信小程序
-        if(isWxMini) {
+        if(isWx) {
             return wx.showToast({
                 title: params.msg,
                 icon: 'none'
@@ -71,11 +86,27 @@ class WeValidator {
         }
         
         // 支付宝小程序
-        if(isAliMini){
+        if(isMy){
             return my.showToast({
                 content: params.msg,
                 type: 'none'
             })
+        }
+
+        // 百度小程序
+        if(isSwan){
+          return swan.showToast({
+              title: params.msg,
+              icon: 'none'
+          })
+        }
+
+        // 头条小程序
+        if(isTt){
+          return tt.showToast({
+              title: params.msg,
+              icon: 'none'
+          })
         }
 
         // 浏览器端
@@ -83,49 +114,50 @@ class WeValidator {
     }
 
     /**
+     * 获取错误提示内容
+     */
+    _getErrorMessage(ruleName, attr, param){
+      let messages = this.options.messages
+      let defaultMessage = WeValidator.RULES[ruleName].message
+
+      if(messages.hasOwnProperty(attr) && messages[attr][ruleName]){
+        defaultMessage = messages[attr][ruleName]
+      }
+
+      if(defaultMessage){
+        defaultMessage = defaultMessage.replace(/\{(\d)\}/g, function($0, $1){
+          if(isArray(param)){
+            return param[$1]
+          }else{
+            return param
+          }
+        })
+        
+        return defaultMessage
+      }
+    }
+
+    /**
      * 验证配置规则是否无效
      */
-    isRuleInvalid(ruleName, attr) {
-        if (!validator.hasOwnProperty(ruleName)) {
-            console.warn && console.warn(`没有此验证类型：${ruleName}，字段：${attr}`);
+    _isRuleInvalid(ruleName, attr) {
+        if (!WeValidator.RULES.hasOwnProperty(ruleName)) {
+            console.warn && console.warn(`没有此验证规则：${ruleName}，字段：${attr}`)
             return true
         }
     }
 
     /**
-     * 动态添加规则
-     */
-    addRules(options = {}) {
-      Object.assign(this.options.rules, options.rules);
-      Object.assign(this.options.messages, options.messages);
-
-      this.checkRules()
-    }
-
-    /**
-     * 动态删除规则
-     */
-    removeRules(rules) {
-      if(!(rules instanceof Array)) throw new Error('参数须为数组');
-      
-      for(let i = 0; i < rules.length; i++){
-        let key = rules[i];
-
-        delete this.options.rules[key];
-      }
-    }
-
-    /**
      * 验证所有配置规则是否正确
      */
-    checkRules() {
-        let _rules_ = this.options.rules;
+    _checkAllRules() {
+        let _rules_ = this.options.rules
 
         // 遍历字段
         for (let attr in _rules_) {
             // 遍历验证规则
             for (let ruleName in _rules_[attr]) {
-                if (this.isRuleInvalid(ruleName, attr)) continue;
+                if (this._isRuleInvalid(ruleName, attr)) continue
             }
         }
     }
@@ -134,70 +166,85 @@ class WeValidator {
      * 验证表单数据
      */
     checkData(data, onMessage, showMessage = true) {
-        let _rules_ = this.options.rules;
-        let _messages_ = this.options.messages;
-        let multiCheck = this.options.multiCheck;
+        let _rules_ = this.options.rules
+        let multiCheck = this.options.multiCheck
         let hasError = false
         let errorData = {}
+
+        this.data = data
 
         // 遍历字段
         for (let attr in _rules_) {
             // 遍历验证规则
             for (let ruleName in _rules_[attr]) {
-                if (this.isRuleInvalid(ruleName, attr)) continue;
+                if (this._isRuleInvalid(ruleName, attr)) continue
 
-                let ruleValue = _rules_[attr][ruleName];
-                let value = '';
+                let ruleParam = _rules_[attr][ruleName]
+                let value = ''
 
                 if (data.hasOwnProperty(attr)) {
-                    value = data[attr];
+                    value = data[attr]
                 }
 
-                let args = [];
+                let param = ruleParam
 
-                args.push(value);
-
-                switch (Object.prototype.toString.call(ruleValue)) {
-                    case '[object Function]': // 动态属性校验时应该使用函数
-                        ruleValue = ruleValue(value, data);
-                        args.push(ruleValue);
-                        break;
-                    case '[object Array]':
-                        args = args.concat(ruleValue);
-                        break;
-                    default:
-                        args.push(ruleValue);
-                        break;
+                if(isFunction(ruleParam)){
+                  param = ruleParam.call(this, value)
                 }
 
-                if (!validator[ruleName].apply(validator, args)) {
+                if (!WeValidator.checkField.call(this, ruleName, value, param)) {
                   // 验证不通过
-                  if (showMessage && _messages_.hasOwnProperty(attr) && _messages_[attr][ruleName]) {
-                      let params = {
-                          name: attr,
-                          value: args.splice(0, 1)[0],
-                          param: args,
-                          rule: ruleName,
-                          msg: _messages_[attr][ruleName]
-                      }
-                      errorData[attr] = params
+                  let msg = this._getErrorMessage(ruleName, attr, param)
 
-                      if(!multiCheck) this.showErrorMessage(params, onMessage);
+                  if (showMessage && msg) {
+                      let errorParam = {
+                          name: attr,
+                          value: value,
+                          param: param,
+                          rule: ruleName,
+                          msg: msg
+                      }
+                      errorData[attr] = errorParam
+
+                      if(!multiCheck) this._showErrorMessage(errorParam, onMessage)
                   }
                   hasError = true
-                  if(!multiCheck) return false;
+                  if(!multiCheck) return false
                 }
             }
         }
 
         if(hasError){
           if(multiCheck){
-            this.showErrorMessage(errorData, onMessage);
+            this._showErrorMessage(errorData, onMessage)
           }
-          return false;
+          return false
         }
 
-        return true;
+        return true
+    }
+
+    /**
+     * 动态添加规则
+     */
+    addRules(options = {}) {
+      Object.assign(this.options.rules, options.rules || {})
+      Object.assign(this.options.messages, options.messages || {})
+
+      this._checkAllRules()
+    }
+
+    /**
+     * 动态删除规则
+     */
+    removeRules(rules) {
+      if(!isArray(rules)) throw new Error('参数须为数组')
+      
+      for(let i = 0; i < rules.length; i++){
+        let key = rules[i]
+
+        delete this.options.rules[key]
+      }
     }
 
     /**
@@ -209,11 +256,7 @@ class WeValidator {
 
 }
 
-// validator => WeValidator
-for (let attr in validator) {
-    if(!validator.hasOwnProperty(attr)) continue
-    
-    WeValidator[attr] = validator[attr]
-}
+validatorRules(WeValidator)
+WeValidator.required = WeValidator.RULES.required.rule
 
 module.exports = WeValidator

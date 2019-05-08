@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const path = require('path');
+const isProduction = process.env.NODE_ENV === 'production';
 
 const packageJSON = require('./package.json');
 
@@ -35,6 +36,16 @@ license: ${packageJSON.license}`)
         resolve: {
             extensions: ['.js']
         }
+    }
+
+    if(isProduction){
+        config.plugins.push(
+            new webpack.optimize.UglifyJsPlugin({
+                warnings: false,
+                sourceMap: false,
+                mangle: false
+            })
+        )
     }
 
     config.output.path = outputPath

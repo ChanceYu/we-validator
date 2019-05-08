@@ -39,8 +39,7 @@ export default {
             mobile: true
           },
           str: {
-            required: true,
-            stringLength: 3
+            length: 3
           }
         },
         messages: {
@@ -52,8 +51,7 @@ export default {
             mobile: '手机号格式不正确'
           },
           str: {
-            required: '请输入字符串',
-            stringLength: '字符串长度不对'
+            length: '请输入长度为3的字符串'
           }
         }
       });

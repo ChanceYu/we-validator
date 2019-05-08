@@ -1,14 +1,14 @@
 {
   "name": "we-validator",
-  "version": "1.4.3",
-  "description": "简单灵活的表单验证插件",
+  "version": "2.0.0",
+  "description": "简单灵活的表单验证插件，支持小程序、浏览器、Nodejs",
   "main": "lib/we-validator.js",
   "scripts": {
-    "build": "npm run build:pro && npm run build:dev",
-    "build:pro": "NODE_ENV=production webpack --config webpack.config --colors",
-    "build:dev": "NODE_ENV=development webpack --watch --config webpack.config --colors",
+    "dev": "NODE_ENV=development webpack --watch --config webpack.config --colors",
+    "build": "NODE_ENV=production webpack --config webpack.config --colors",
+    "build:dev": "npm run build && npm run dev",
     "test": "mocha test/*.js",
-    "prepublish": "npm run build:pro"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
