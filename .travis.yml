@@ -4,6 +4,6 @@ node_js:
 install:
 - npm install
 script:
-- npm run build:pro
+- npm run build
 after_success:
 - npm run test
