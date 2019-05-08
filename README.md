@@ -25,14 +25,24 @@
 - 支持[实例化](#实例化)和[单独校验某个字段](#单独校验某个字段)两种使用方式
 - [支持自定义错误消息提示](#自定义错误消息提示)
 - [支持多个字段同时校验并显示错误](#多个字段同时校验并显示错误)
+- [默认支持各种规则类型](#默认支持的规则)
 
 
 
 ## 安装
-非 npm 安装方式，直接引入 lib 目录下的 `we-validator.js` 到项目即可
+使用 npm:
+
 ```bash
 npm install we-validator --save
 ```
+
+使用 cdn:
+
+```html
+<script src="https://unpkg.com/we-validator/lib/we-validator.js"></script>
+```
+
+也可以直接引入 lib 目录下的 `we-validator.js` 到项目
 
 
 ## 使用
@@ -111,7 +121,7 @@ Page({
 
 ## Static API
  - [WeValidator](#static-api)
-    - [.addRule(ruleName, callback)](#wevalidatoraddrulerulename-callback) 添加自定义规则
+    - [.addRule(ruleName, ruleOption)](#wevalidatoraddrulerulename-ruleoption) 添加自定义规则
     - [.checkField(ruleName, value, param)](#单独校验某个字段) 校验单个字段
     - [.onMessage](#自定义错误消息提示) 设置全局错误提示
 
@@ -254,23 +264,29 @@ validatorInstance.addRules({
 validatorInstance.removeRules(['username'])
 ```
 
-### WeValidator.addRule(ruleName, callback)
+### WeValidator.addRule(ruleName, ruleOption)
 静态方法：添加自定义规则
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
 | ruleName | <code>string</code> |  | 规则名称 |
-| callback | <code>function</code> |  | 规则校验函数，需要返回一个 `boolean`，参考下面 |
+| ruleOption | <code>object</code> |  | 规则配置 |
+| [ruleOption.message] | <code>string</code> |  | 默认提示文字 |
+| [ruleOption.rule] | <code>function\|regexp</code> |  | 规则校验函数，需要返回一个 `boolean`。<br>也可以直接写一个正则表达式（如果只是正则类型的校验）。 |
 
 ```javascript
 const WeValidator = require('we-validator')
 
-// 添加自定义规则
+// 添加自定义规则（这两种写法一样）
 WeValidator.addRule('theRuleName', {
   message: '规则错误提示文字',
   rule(value, param){
     return !this.required(value) || /\d/.test(value)
   }
+})
+WeValidator.addRule('theRuleName', {
+  message: '规则错误提示文字',
+  rule: /\d/
 })
 
 // 使用方式一，实例化
@@ -290,9 +306,11 @@ new WeValidator({
 // 使用方式二，调用函数
 WeValidator.checkField('theRuleName', 'str')
 ```
+#### 注意
+使用函数添加自定义规则时，`!this.required(value)` 判断不能少，参考上面。
 
 
-## 其它
+## 详细使用和错误提示配置
 #### 实例化
 
 ```javascript
