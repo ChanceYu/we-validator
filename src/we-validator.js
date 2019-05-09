@@ -1,4 +1,4 @@
-import validatorRules from './rules'
+import RULES from './rules'
 
 /**
  * 环境检测：
@@ -25,20 +25,29 @@ class WeValidator {
         this._checkAllRules()
     }
 
+    /**
+     * 默认参数
+     * @param {object} rules 验证字段的规则
+     * @param {object} messages 验证字段错误的提示信息
+     * @param {function} onMessage 错误提示显示方式
+     * @param {boolean} multiCheck 是否校验多个字段
+     */
     static defaultOptions = {
         rules: {},
         messages: {},
-        multiCheck: false, // 是否一次验证多个
-        onMessage: null
+        onMessage: null,
+        multiCheck: false
     }
 
-    // 所有校验规则
+    /**
+     * 所有校验规则
+     */
     static RULES = {}
 
     /**
      * 动态添加验证规则（全局）
-     * @param {String} ruleName 规则名称
-     * @param {RegExp|Function} ruleValue 验证规则
+     * @param {string} ruleName 规则名称
+     * @param {regexp|function} ruleValue 验证规则
      */
     static addRule = function (ruleName, ruleValue) {
         WeValidator.RULES[ruleName] = ruleValue
@@ -46,6 +55,9 @@ class WeValidator {
 
     /**
      * 验证单个字段数据
+     * @param {string} ruleName 规则名称
+     * @param {string} value 要验证的值
+     * @param {any} param 传递的验证参数
      */
     static checkField = function (ruleName, value, param){
       let rule = WeValidator.RULES[ruleName].rule
@@ -164,6 +176,9 @@ class WeValidator {
 
     /**
      * 验证表单数据
+     * @param {object} data 验证的数据对象
+     * @param {function} onMessage 自定义错误提示函数
+     * @param {boolean} showMessage 是否显示提示信息，默认显示
      */
     checkData(data, onMessage, showMessage = true) {
         let _rules_ = this.options.rules
@@ -225,7 +240,10 @@ class WeValidator {
     }
 
     /**
-     * 动态添加规则
+     * 动态添加字段校验
+     * @param {object} options 配置参数
+     * @param {object} [options.rules] 规则
+     * @param {object} [options.messages] 提示消息
      */
     addRules(options = {}) {
       Object.assign(this.options.rules, options.rules || {})
@@ -235,20 +253,22 @@ class WeValidator {
     }
 
     /**
-     * 动态删除规则
+     * 动态移除字段校验
+     * @param {array} fields 要删除校验的字段
      */
-    removeRules(rules) {
-      if(!isArray(rules)) throw new Error('参数须为数组')
+    removeRules(fields) {
+      if(!isArray(fields)) throw new Error('参数须为数组')
       
-      for(let i = 0; i < rules.length; i++){
-        let key = rules[i]
+      for(let i = 0; i < fields.length; i++){
+        let key = fields[i]
 
         delete this.options.rules[key]
       }
     }
 
     /**
-     * 校验数据是否有效，不提示
+     * 校验数据是否有效，不提示错误信息
+     * @param {object} data 验证的数据对象
      */
     isValid(data) {
       return this.checkData(data, null, false)
@@ -256,7 +276,7 @@ class WeValidator {
 
 }
 
-validatorRules(WeValidator)
+WeValidator.RULES = RULES
 WeValidator.required = WeValidator.RULES.required.rule
 
 module.exports = WeValidator
