@@ -133,7 +133,7 @@ Page({
 
 ## 默认支持的规则
 
-具体规则内容可查看[源码](./src/rules.js)
+具体规则内容可[查看源码](./src/rules.js)
 
 | 规则 | 描述 | 默认提示 |
 | --- | --- | --- |
@@ -287,7 +287,7 @@ validatorInstance.removeRules(['username'])
 | --- | --- | --- | --- |
 | ruleName | <code>string</code> |  | 规则名称 |
 | ruleOption | <code>object</code> |  | 规则配置 |
-| [ruleOption.message] | <code>string</code> |  | 默认错误提示文字<br>可以动态插入参数，例如 `请输入长度在 {0} 到 {1} 之间的字符`，[参考](#https://github.com/ChanceYu/we-validator/blob/master/src/rules.js#L108) |
+| [ruleOption.message] | <code>string</code> |  | 默认错误提示文字<br>可以动态插入参数，例如 `请输入长度在 {0} 到 {1} 之间的字符`，[参考](https://github.com/ChanceYu/we-validator/blob/master/src/rules.js#L108) |
 | [ruleOption.rule] | <code>function\|regexp</code> |  | 规则校验函数，需要返回一个 `boolean`。<br>也可以直接写一个正则表达式（如果只是正则类型的校验）。 |
 
 <details>
