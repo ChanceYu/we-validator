@@ -20,7 +20,7 @@
 - 不依赖任何框架
 - 既支持原生小程序方式，也支持 mpvue、wepy等小程序框架使用
 - 支持web浏览器以及Nodejs端使用
-- [支持自定义规则](#wevalidatoraddrulerulename-callback)
+- [支持自定义规则](#wevalidatoraddrulerulename-ruleoption)
 - [支持动态添加或移除字段校验](#addrulesoptions)
 - 支持[实例化](#new-wevalidatoroptions--object)和[单独校验某个字段](#wevalidatorcheckfieldrulename-value-param)两种使用方式
 - [支持自定义错误消息提示](#自定义错误消息提示)
@@ -109,8 +109,6 @@ Page({
 ```
 
 </details>
-
-<br/>
 
 您也可参考当前项目下对应示例
 - [原生微信小程序使用方式](./example/wechat/pages/index/index.js)
@@ -208,8 +206,6 @@ new WeValidator({
 
 </details>
 
-<br/>
-
 ### .checkData(data, onMessage) ⇒ <code>boolean</code>
 校验数据
 
@@ -273,8 +269,6 @@ validatorInstance.addRules({
 
 </details>
 
-<br/>
-
 ### .removeRules(fields)
 动态移除字段校验
 
@@ -334,8 +328,6 @@ WeValidator.checkField('theRuleName', 'str')
 
 </details>
 
-<br/>
-
 #### 注意
 使用函数添加自定义规则时，`!this.required(value)` 判断不能少，参考上面。
 
@@ -393,10 +385,15 @@ if(!obj.checkData(formData, onMessage)){
 }
 ```
 
+</details>
+
 #### 多个字段同时校验并显示错误
 显示如下，**注意：当`multiCheck`为`true`时，建议使用自定义`onMessage`**
 
 ![we-validator](./assets/demo_multi.png)
+
+<details>
+<summary>点击查看栗子 :chestnut: </summary>
 
 ```javascript
 var validatorInstance = new WeValidator({
@@ -428,8 +425,6 @@ var validatorInstance = new WeValidator({
 ```
 
 </details>
-
-<br/>
 
 ## 协议
 
