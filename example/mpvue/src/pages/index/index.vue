@@ -1,10 +1,10 @@
 <template>
     <form @submit="onSubmitForm">
-        <input type="text" name="username" placeholder="用户名" />
-        <input type="number" name="phoneno" placeholder="手机号" />
-        <input type="text" name="str" placeholder="长度为3的字符串" />
+        <input type="text" v-model="formData.username" name="username" placeholder="用户名" />
+        <input type="number" v-model="formData.phoneno" name="phoneno" placeholder="手机号" />
+        <input type="text" v-model="formData.str" name="str" placeholder="长度为3的字符串" />
 
-        <button type="default" form-type="submit">提交</button>
+        <button type="primary" :disabled="disabledBtn" form-type="submit">提交</button>
     </form>
 </template>
 
@@ -13,7 +13,34 @@ import WeValidator from 'we-validator'
 
 export default {
   data () {
-    return {};
+    return {
+      formData: {
+        username: '',
+        phoneno: '',
+        str: '',
+      },
+      disabledBtn: true
+    }
+  },
+
+  watch: {
+    formData: {
+      handler(val, oldVal) {
+        /**
+         * 全部规则校验通过，按钮才可点击
+         */
+        // this.disabledBtn = !this.validatorInstance.isValid(val)
+
+
+        /**
+         * 用户名和手机号填写了，按钮才可点击
+         */
+        const valid = WeValidator.checkValue('required', val.username) && WeValidator.checkValue('required', val.phoneno)
+
+        this.disabledBtn = !valid
+      },
+      deep: true
+    }
   },
 
   methods: {

@@ -59,7 +59,7 @@ class WeValidator {
      * @param {string} value 要验证的值
      * @param {any} param 传递的验证参数
      */
-    static checkField = function (ruleName, value, param){
+    static checkValue = function (ruleName, value, param){
       let rule = WeValidator.RULES[ruleName].rule
 
       if(isRegExp(rule)){
@@ -207,7 +207,7 @@ class WeValidator {
                   param = ruleParam.call(this, value)
                 }
 
-                let isFieldValid = WeValidator.checkField.call(this, ruleName, value, param)
+                let isFieldValid = WeValidator.checkValue.call(this, ruleName, value, param)
 
                 if (!isFieldValid) {
                   // 验证不通过

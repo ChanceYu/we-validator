@@ -2,17 +2,18 @@
   <img width="400" src="assets/v2.png" alt="we-validator" />
   <br>
 
-  <p><a href="https://www.npmjs.com/package/we-validator"><img src="https://nodei.co/npm/we-validator.png?compact=true" /></a></p>
-
   <a href="https://travis-ci.org/ChanceYu/we-validator"><img src="https://travis-ci.org/ChanceYu/we-validator.svg?branch=master" /></a>
+  <a href="https://www.npmjs.com/package/we-validator"><img src="https://img.shields.io/npm/v/we-validator.svg" /></a>
   <a href="javascript:;"><img src="https://img.shields.io/badge/language-JavaScript-brightgreen.svg" /></a>
-  <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
+  <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/npm/l/we-validator.svg" /></a>
 
 </div>
 
-> v2 和 v1 版本差别较大，如果要使用老版本，可以查看 [v1 版本](https://github.com/ChanceYu/we-validator/tree/v1)。
+> v2 和 v1 版本差别较大，如果您使用的是老版本，可以查看 [v1 版本](https://github.com/ChanceYu/we-validator/tree/v1)。推荐使用2.x 版本。
 
 简单灵活的表单验证插件，支持小程序、浏览器、Nodejs。小程序端支持：微信、支付宝、百度智能、今日头条，小程序默认提示使用 `showToast`。
+
+[API 文档](#api) | [示例 Examples](#examples)
 
 ## 特点
 
@@ -22,7 +23,7 @@
 - 支持web浏览器以及Nodejs端使用
 - [支持自定义规则](#wevalidatoraddrulerulename-ruleoption)
 - [支持动态添加或移除字段校验](#addrulesoptions)
-- 支持[实例化](#new-wevalidatoroptions)和[单独校验某个字段](#wevalidatorcheckfieldrulename-value-param)两种使用方式
+- 支持[实例化](#new-wevalidatoroptions)和[值单独校验](#wevalidatorcheckvaluerulename-value-param)两种使用方式
 - [支持自定义错误消息提示](#自定义错误消息提示)
 - [支持多个字段同时校验并显示错误](#多个字段同时校验并显示错误)
 - [默认支持各种规则类型](#默认支持的规则)
@@ -110,7 +111,7 @@ Page({
 
 </details>
 
-## example
+## Examples
 您也可参考当前项目下对应示例
 
 - [原生微信小程序使用方式](./example/wechat/pages/index/index.js)
@@ -130,7 +131,7 @@ Page({
 ## Static API
  - [WeValidator](#static-api)
     - [.addRule(ruleName, ruleOption)](#wevalidatoraddrulerulename-ruleoption) 添加自定义规则
-    - [.checkField(ruleName, value, param)](#wevalidatorcheckfieldrulename-value-param) 校验单个字段
+    - [.checkValue(ruleName, value, param)](#wevalidatorcheckvaluerulename-value-param) 单独校验某个内容
     - [.onMessage](#自定义错误消息提示) 设置全局错误提示
 
 
@@ -331,7 +332,7 @@ new WeValidator({
 })
 
 // 使用方式二，调用函数
-WeValidator.checkField('theRuleName', 'str')
+WeValidator.checkValue('theRuleName', 'str')
 ```
 
 </details>
@@ -340,14 +341,14 @@ WeValidator.checkField('theRuleName', 'str')
 使用函数添加自定义规则时，`!this.required(value)` 判断不能少，参考上面。
 
 
-### WeValidator.checkField(ruleName, value, param)
-静态方法：单独校验某个字段
+### WeValidator.checkValue(ruleName, value, param)
+静态方法：值单独校验
 
-支持默认提供的所有规则，[默认支持的规则](#默认支持的规则)
+支持所有[默认支持的规则](#默认支持的规则)，也支持自定义的规则。通常用于单独校验某个值，或者表单中某些字段填写了按钮才可点击的场景，[参考]((./example/mpvue/src/pages/index/index.vue))。
 
 ```javascript
-let b1 = WeValidator.checkField('min', 'str', 6) // 不能小于6的数字
-let b2 = WeValidator.checkField('range', 'str', [2, 5]) // 大于2小于5的数字
+let b1 = WeValidator.checkValue('min', 'str', 6) // 不能小于6的数字
+let b2 = WeValidator.checkValue('range', 'str', [2, 5]) // 大于2小于5的数字
 ```
 
 #### 自定义错误消息提示
@@ -400,7 +401,7 @@ if(!obj.checkData(formData, onMessage)){
 
 ![we-validator](./assets/demo_multi.png)
 
-<details>
+<details open>
 <summary>点击查看栗子 :chestnut: </summary>
 
 ```javascript
@@ -434,10 +435,14 @@ var validatorInstance = new WeValidator({
 
 </details>
 
-## 协议
+## Issues
+如果您在使用过程中发现 Bug，或者有好的建议，欢迎[报告问题](https://github.com/ChanceYu/we-validator/issues)。
+
+## License
 
 [![license][img-mit]][url-mit]
 
+Copyright (c) 2019 ChanceYu
 
 [url-github]: https://github.com/ChanceYu/we-validator
 [url-npm]: https://www.npmjs.com/package/we-validator
@@ -447,5 +452,5 @@ var validatorInstance = new WeValidator({
 [img-npm]: https://nodei.co/npm/we-validator.png?compact=true
 [img-travis]: https://travis-ci.org/ChanceYu/we-validator.svg?branch=master
 [img-javascript]: https://img.shields.io/badge/language-JavaScript-brightgreen.svg
-[img-mit]: https://img.shields.io/badge/license-MIT-blue.svg
+[img-mit]: https://img.shields.io/npm/l/we-validator.svg
 
