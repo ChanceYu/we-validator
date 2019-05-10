@@ -56,10 +56,14 @@
         <button id="submitButton" type="button">提交</button>
     </form>
 
-    <script src="../../lib//we-validator.js"></script>
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/form-serializer/dist/jquery.serialize-object.min.js"></script>
+    <script src="../../lib/we-validator.js"></script>
 
     <script>
-        // 注意：此demo比较简单，请结合实际项目修改
+        /**
+         * 注意：此demo比较简单，请结合实际项目修改
+         */
         var submitForm = document.getElementById('submitForm');
         var submitButton = document.getElementById('submitButton');
         
@@ -114,7 +118,7 @@
         });
 
         submitButton.onclick = function(){
-            var data = getFormData();
+            var data = $(submitForm).serializeObject();
 
             console.log(data)
             clearError()
@@ -123,24 +127,6 @@
             console.log('开始提交');
             
             return false
-        }
-
-        function getFormData(){
-            var elements = submitForm.elements;
-            var i = 0;
-            var len = elements.length;
-
-            var data = {};
-
-            for(; i < len; i++){
-                var control = elements[i];
-
-                if(control.name){
-                    data[control.name] = control.value
-                }
-            }
-
-            return data
         }
 
         function clearError(){

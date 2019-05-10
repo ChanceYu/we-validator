@@ -207,7 +207,9 @@ class WeValidator {
                   param = ruleParam.call(this, value)
                 }
 
-                if (!WeValidator.checkField.call(this, ruleName, value, param)) {
+                let isFieldValid = WeValidator.checkField.call(this, ruleName, value, param)
+
+                if (!isFieldValid) {
                   // 验证不通过
                   let msg = this._getErrorMessage(ruleName, attr, param)
 

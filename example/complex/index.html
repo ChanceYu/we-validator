@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>复杂案例 we-validator</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        form{
+            margin: 10px;
+            padding-bottom: 80px;
+        }
+
+        .desc{
+          font-size: 14px;
+          padding-bottom: 10px;
+          margin-bottom: 20px;
+          border-bottom: 1px solid #f5f5f5;
+        }
+        .desc li{
+          font-size: 12px;
+          color: #7e7e7e;
+          margin-left: 10px;
+        }
+
+        .control-box{
+          display: flex;
+          align-items: center;
+        }
+
+        .lbl{
+          width: 90px;
+          font-size: 12px;
+        }
+        
+        input{
+          flex: 1;
+          margin: 10px 0;
+          padding: 10px 0;
+          text-indent: 10px;
+          border: 1px solid #eee;
+          font-size: 16px;
+        }
+
+        .error-box{
+          color: red;
+          font-size: 12px;
+          margin-bottom: 20px;
+          margin-left: 90px;
+        }
+
+        button{
+            padding: 10px 0;
+            width: 100%;
+            border: 1px solid #eee;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+    <form id="submitForm">
+        <div class="desc">
+          <span style="color:red">要求：</span>
+          <ul>
+            <li>关键字：可选，必须以字母 a 开头</li>
+            <li>金额：必填，最大金额不能小于最小金额</li>
+              <li>爱好：可选，如果选择最少选择两项</li>
+              <li>携带人员：必须选爸，不能同时选哥和弟，也不能同时选姐和妹</li>
+              <li>喜欢的姓名：可选，不能输入 张三</li>
+          </ul>
+        </div>
+      
+        <div class="control-box">
+            <label class="lbl">关键字：</label>
+            <input type="text" name="keyword" />
+        </div>
+        <p class="error-box" id="keyword"></p>
+      
+        <div class="control-box">
+            <label class="lbl">最小金额：</label>
+            <input type="number" name="minPrice" />
+        </div>
+        <p class="error-box" id="minPrice"></p>
+        
+        <div class="control-box">
+            <label class="lbl">最大金额：</label>
+            <input type="number" name="maxPrice" />
+        </div>
+        <p class="error-box" id="maxPrice"></p>
+        
+        <div class="control-box">
+            <label class="lbl">爱好：</label>
+            <label><input name="hobby[]" type="checkbox" value="1" />篮球</label>&nbsp;
+            <label><input name="hobby[]" type="checkbox" value="2" />足球</label>&nbsp;
+            <label><input name="hobby[]" type="checkbox" value="3" />台球</label>&nbsp;
+            <label><input name="hobby[]" type="checkbox" value="4" />羽毛球</label>
+        </div>
+        <p class="error-box" id="hobby"></p>
+        
+        <div class="control-box">
+            <label class="lbl">携带人员：</label>
+            <label><input name="family[]" type="checkbox" value="ba" />爸</label>&nbsp;
+            <label><input name="family[]" type="checkbox" value="ma" />妈</label>&nbsp;
+            <label><input name="family[]" type="checkbox" value="gg" />哥</label>&nbsp;
+            <label><input name="family[]" type="checkbox" value="dd" />弟</label>&nbsp;
+            <label><input name="family[]" type="checkbox" value="jj" />姐</label>&nbsp;
+            <label><input name="family[]" type="checkbox" value="mm" />妹</label>
+        </div>
+        <p class="error-box" id="family"></p>
+      
+        <div class="control-box">
+            <label class="lbl">喜欢的姓名：</label>
+            <input type="text" name="userName" />
+        </div>
+        <p class="error-box" id="userName"></p>
+
+        <button id="submitButton" type="button">提交</button>
+    </form>
+
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/form-serializer/dist/jquery.serialize-object.min.js"></script>
+    <script src="../../lib/we-validator.js"></script>
+
+    <script>
+        /**
+         * 注意：此demo比较简单，请结合实际项目修改
+         */
+        var submitForm = document.getElementById('submitForm');
+        var submitButton = document.getElementById('submitButton');
+
+        // 必须以字母 a 开头
+        WeValidator.addRule('startA', {
+          message: '必须以字母 a 开头',
+          rule: /^a.*/i
+        })
+
+        // 携带人员
+        WeValidator.addRule('checkChild', {
+          rule: function(value, param){
+            return !this.required(value) || (!(value.indexOf('gg') > -1 && value.indexOf('dd') > -1) && !(value.indexOf('jj') > -1 && value.indexOf('mm') > -1))
+          }
+        })
+        
+        var validatorInstance = new WeValidator({
+            multiCheck: true,
+            onMessage: function(data){
+              console.log(data);
+              
+              for(var name in data){
+                let ele = document.getElementById(name)
+
+                if(ele){
+                  ele.innerHTML = data[name].msg
+                }
+              }
+            },
+            rules: {
+                keyword: {
+                    startA: true,
+                },
+                minPrice: {
+                    required: true,
+                    min: 2 // 大于 2
+                },
+                maxPrice: {
+                    required: true,
+                    notEqualTo: 'minPrice',
+                    min: 'minPrice' // 大于‘最大金额’
+                },
+                hobby: {
+                    minlength: 2
+                },
+                family: {
+                    required: true,
+                    contains: 'ba',
+                    checkChild: true
+                },
+                userName: {
+                    notContains: '张三'
+                }
+            },
+            messages: {
+                minPrice: {
+                    required: '请输入最小金额',
+                    min: '请输入大于 {0} 的金额'
+                },
+                maxPrice: {
+                    required: '请输入最大金额',
+                    notEqualTo: '最大金额不能等于最小金额',
+                    min: '最大金额不能小于最小金额'
+                },
+                hobby: {
+                    minlength: '最少选择两项'
+                },
+                family: {
+                    required: '请选择携带人员',
+                    contains: '必须选爸',
+                    checkChild: '不能同时选哥和弟，也不能同时选姐和妹'
+                },
+                userName: {
+                    notContains: '不能输入张三'
+                }
+            }
+        });
+
+        submitButton.onclick = function(){
+            var data = $(submitForm).serializeObject();
+
+            console.log(data)
+            clearError()
+            if (!validatorInstance.checkData(data)) return;
+
+            console.log('开始提交');
+            
+            return false
+        }
+
+        function clearError(){
+          var eles = document.querySelectorAll('.error-box')
+
+          eles = [].slice.call(eles)
+
+          for(var i = 0; i < eles.length; i++){
+            eles[i].innerHTML = ''
+          }
+        }
+    </script>
+</body>
+</html>

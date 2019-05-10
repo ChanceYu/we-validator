@@ -58,12 +58,21 @@ module.exports = {
     rule: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
   },
   /**
-   * 值相同校验（例如：密码和确认密码）
+   * 字段值相同校验（例如：密码和确认密码）
    */
   equalTo: {
-    message: '输入值必须和 {0} 相同',
+    message: '输入值必须和字段 {0} 相同',
     rule(value, param){
       return !this.required(value) || value === this.data[param]
+    }
+  },
+  /**
+   * 字段值不相同校验，与 equalTo 相反
+   */
+  notEqualTo: {
+    message: '输入值不能和字段 {0} 相同',
+    rule(value, param){
+      return !this.required(value) || value !== this.data[param]
     }
   },
   /**
@@ -73,6 +82,15 @@ module.exports = {
     message: '输入值必须包含 {0}',
     rule(value, param){
       return !this.required(value) || value.indexOf(param) > -1
+    }
+  },
+  /**
+   * 不能包含某字符
+   */
+  notContains: {
+    message: '输入值不能包含 {0}',
+    rule(value, param){
+      return !this.required(value) || value.indexOf(param) === -1
     }
   },
   /**
@@ -119,27 +137,38 @@ module.exports = {
     rule: /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/
   },
   /**
-   * 整数数字
+   * 正整数数字
    */
   digits: {
-    message: '只能输入整数数字',
+    message: '只能输入正整数数字',
     rule: /^\d+$/
   },
   /**
-   * 不小于多少的数字
+   * 正整数或负整数数字
+   */
+  integer: {
+    message: '只能输入整数数字',
+    rule: /^-?\d+$/
+  },
+  /**
+   * 大于多少的数字/字段值
    */
   min: {
-    message: '请输入不小于 {0} 的数字',
+    message: '请输入大于 {0} 的数字',
     rule(value, param){
+      if(typeof param === 'string') param = this.data[param]
+      
       return !this.required(value) || value >= param
     }
   },
   /**
-   * 不能大于多少的数字
+   * 小于多少的数字/字段值
    */
   max: {
-    message: '请输入不大于 {0} 的数字',
+    message: '请输入小于 {0} 的数字',
     rule(value, param){
+      if(typeof param === 'string') param = this.data[param]
+
       return !this.required(value) || value <= param
     }
   },
@@ -201,5 +230,19 @@ module.exports = {
   dateISO: {
     message: '请输入有效的日期（ISO标准格式）',
     rule: /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/
+  },
+  /**
+   * ipv4地址
+   */
+  ipv4: {
+    message: '请输入有效的IPv4地址',
+    rule: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
+  },
+  /**
+   * ipv6地址
+   */
+  ipv6: {
+    message: '请输入有效的IPv6地址',
+    rule: /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i
   }
 }
