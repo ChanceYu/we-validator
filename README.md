@@ -401,7 +401,7 @@ if(!obj.checkData(formData, onMessage)){
 
 ![we-validator](./assets/demo_multi.png)
 
-<details open>
+<details>
 <summary>点击查看栗子 :chestnut: </summary>
 
 ```javascript
