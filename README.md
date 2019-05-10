@@ -344,7 +344,7 @@ WeValidator.checkValue('theRuleName', 'str')
 ### WeValidator.checkValue(ruleName, value, param)
 静态方法：值单独校验
 
-支持所有[默认支持的规则](#默认支持的规则)，也支持自定义的规则。通常用于单独校验某个值，或者表单中某些字段填写了按钮才可点击的场景，[参考]((./example/mpvue/src/pages/index/index.vue))。
+支持所有[默认支持的规则](#默认支持的规则)，也支持自定义的规则。通常用于单独校验某个值，或者表单中某些字段填写了按钮才可点击的场景，[参考](./example/mpvue/src/pages/index/index.vue)。
 
 ```javascript
 let b1 = WeValidator.checkValue('min', 'str', 6) // 不能小于6的数字
