@@ -16,7 +16,7 @@ module.exports = {
   /**
    * 正则通用
    */
-  regex: {
+  pattern: {
     message: '不符合此验证规则',
     rule(value, param){
       return param.test(value)

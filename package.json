@@ -1,6 +1,6 @@
 {
   "name": "we-validator",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "简单灵活的表单验证插件，支持小程序、浏览器、Nodejs",
   "main": "lib/we-validator.js",
   "scripts": {
