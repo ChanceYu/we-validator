@@ -13,7 +13,7 @@ describe('testing: we-validator package', () => {
     it('testing: addRule', () => {
         WeValidator.addRule('theRuleName', {
           rule(value){
-            return !this.required(value) || /\d/.test(value)
+            return /\d/.test(value)
           }
         })
         expect(WeValidator.checkValue('theRuleName', '1')).to.be.ok

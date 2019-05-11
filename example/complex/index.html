@@ -144,7 +144,7 @@
         // 携带人员
         WeValidator.addRule('checkChild', {
           rule: function(value, param){
-            return !this.required(value) || (!(value.indexOf('gg') > -1 && value.indexOf('dd') > -1) && !(value.indexOf('jj') > -1 && value.indexOf('mm') > -1))
+            return !(value.indexOf('gg') > -1 && value.indexOf('dd') > -1) && !(value.indexOf('jj') > -1 && value.indexOf('mm') > -1)
           }
         })
         

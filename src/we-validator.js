@@ -1,5 +1,7 @@
 import RULES from './rules'
 
+const requiredFn = RULES.required.rule
+
 /**
  * 环境检测：
  */
@@ -21,7 +23,7 @@ class WeValidator {
     constructor(options = {}) {
         this.options = Object.assign({}, WeValidator.defaultOptions, options)
 
-        this.required = WeValidator.RULES.required.rule
+        this.required = requiredFn
         this._checkAllRules()
     }
 
@@ -63,11 +65,15 @@ class WeValidator {
       let rule = WeValidator.RULES[ruleName].rule
 
       if(isRegExp(rule)){
-        return !this.required(value) || rule.test(value)
+        return !requiredFn(value) || rule.test(value)
       }
 
       if(isFunction(rule)){
-        return rule.call(this, value, param)
+        if(ruleName === 'required'){
+          return requiredFn(value)
+        }else{
+          return !requiredFn(value) || rule.call(this, value, param)
+        }
       }
     }
 
@@ -279,6 +285,6 @@ class WeValidator {
 }
 
 WeValidator.RULES = RULES
-WeValidator.required = WeValidator.RULES.required.rule
+WeValidator.required = requiredFn
 
 module.exports = WeValidator

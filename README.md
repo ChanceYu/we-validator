@@ -9,7 +9,7 @@
 
 </div>
 
-> v2 和 v1 版本差别较大，如果您使用的是老版本，可以查看 [v1 版本](https://github.com/ChanceYu/we-validator/tree/v1)。推荐使用2.x 版本。
+> v2 和 v1 版本差别较大，如果您使用的是老版本，可以查看 [v1 版本](https://github.com/ChanceYu/we-validator/tree/v1)。推荐使用 2.x 版本。
 
 简单灵活的表单验证插件，支持小程序、浏览器、Nodejs。小程序端支持：微信、支付宝、百度智能、今日头条，小程序默认提示使用 `showToast`。
 
@@ -19,14 +19,14 @@
 
 - 使用简单灵活
 - 不依赖任何框架
-- 既支持原生小程序方式，也支持 mpvue、wepy等小程序框架使用
-- 支持web浏览器以及Nodejs端使用
+- 既支持原生小程序方式，也支持 mpvue、wepy、taro 等小程序框架使用
+- 支持浏览器以及 Nodejs 端使用
 - [支持自定义规则](#wevalidatoraddrulerulename-ruleoption)
 - [支持动态添加或移除字段校验](#addrulesoptions)
 - 支持[实例化](#new-wevalidatoroptions)和[值单独校验](#wevalidatorcheckvaluerulename-value-param)两种使用方式
-- [支持自定义错误消息提示](#自定义错误消息提示)
+- [支持自定义错误消息提示](#wevalidatoronmessage)
 - [支持多个字段同时校验并显示错误](#多个字段同时校验并显示错误)
-- [默认支持各种规则类型](#默认支持的规则)
+- [默认支持常用校验规则](#默认支持的规则)
 
 
 
@@ -47,7 +47,7 @@ npm install we-validator --save
 
 
 ## 使用
-下面是微信小程序的用法，支付宝小程序类似
+下面是微信小程序的用法，其它小程序类似
 
 <details open>
 <summary>点击查看栗子 :chestnut: </summary>
@@ -132,7 +132,7 @@ Page({
  - [WeValidator](#static-api)
     - [.addRule(ruleName, ruleOption)](#wevalidatoraddrulerulename-ruleoption) 添加自定义规则
     - [.checkValue(ruleName, value, param)](#wevalidatorcheckvaluerulename-value-param) 单独校验某个内容
-    - [.onMessage](#自定义错误消息提示) 设置全局错误提示
+    - [.onMessage](#wevalidatoronmessage) 设置全局错误提示
 
 
 ## 默认支持的规则
@@ -172,7 +172,7 @@ Page({
 | `ipv6: true` | ipv6地址 | 请输入有效的IPv6地址 |
 
 
-### new WeValidator(options)
+## new WeValidator(options)
 实例化
 
 **返回**: <code>object</code> -  <code>validatorInstance</code>
@@ -182,7 +182,7 @@ Page({
 | options | <code>object</code> |  |  |
 | [options.rules] | <code>object</code> |  | 验证字段的规则 |
 | [options.messages] | <code>object</code> |  | 验证字段错误的提示信息 |
-| [options.onMessage] | <code>function</code> |  | 错误提示显示方式<br>默认会自动检测环境。小程序默认使用`showToast`<br>普通web浏览器默认使用`alert`<br>Nodejs端不做处理建议自己配置，[详情](#自定义错误消息提示) |
+| [options.onMessage] | <code>function</code> |  | 错误提示显示方式<br>默认会自动检测环境。小程序默认使用`showToast`<br>普通web浏览器默认使用`alert`<br>Nodejs端不做处理建议自己配置，[详情](#wevalidatoronmessage) |
 | [options.multiCheck] | <code>boolean</code> | `false` | 是否校验多个字段<br>需要一次校验多个字段并显示错误信息时使用，[详情](#多个字段同时校验并显示错误) |
 
 <details>
@@ -223,7 +223,7 @@ new WeValidator({
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
 | data | <code>object</code> |  | 需要校验的表单数据 |
-| onMessage | <code>function</code> |  | 自定义错误消息提示，[详情](#自定义错误消息提示) |
+| onMessage | <code>function</code> |  | 自定义错误消息提示，[详情](#wevalidatoronmessage) |
 
 ### .isValid(data)
 校验数据是否有效，无提示
@@ -289,7 +289,7 @@ validatorInstance.addRules({
 validatorInstance.removeRules(['username'])
 ```
 
-### WeValidator.addRule(ruleName, ruleOption)
+## WeValidator.addRule(ruleName, ruleOption)
 静态方法：添加自定义规则，可参考[复杂的校验案例-自定义规则](./example/complex/index.html)
 
 | 参数 | 类型 | 默认值 | 描述 |
@@ -309,7 +309,7 @@ const WeValidator = require('we-validator')
 WeValidator.addRule('theRuleName', {
   message: '默认错误提示文字',
   rule(value, param){
-    return !this.required(value) || /\d/.test(value)
+    return /\d/.test(value)
   }
 })
 WeValidator.addRule('theRuleName', {
@@ -337,11 +337,8 @@ WeValidator.checkValue('theRuleName', 'str')
 
 </details>
 
-#### 注意
-使用函数添加自定义规则时，`!this.required(value)` 判断不能少，参考上面。
 
-
-### WeValidator.checkValue(ruleName, value, param)
+## WeValidator.checkValue(ruleName, value, param)
 静态方法：值单独校验
 
 支持所有[默认支持的规则](#默认支持的规则)，也支持自定义的规则。通常用于单独校验某个值，或者表单中某些字段填写了按钮才可点击的场景，[参考](./example/mpvue/src/pages/index/index.vue)。
@@ -351,9 +348,8 @@ let b1 = WeValidator.checkValue('min', 'str', 6) // 不能小于6的数字
 let b2 = WeValidator.checkValue('range', 'str', [2, 5]) // 大于2小于5的数字
 ```
 
-#### 自定义错误消息提示
-
-可以全局配置一个，也可以单独配置。
+## WeValidator.onMessage
+自定义错误消息提示，可以全局配置一个，也可以单独配置。
 
 优先级是：`.checkData(data, onMessage)` > `new WeValidator({ onMessage })` > `WeValidator.onMessage` > 默认检测
 
@@ -396,7 +392,7 @@ if(!obj.checkData(formData, onMessage)){
 
 </details>
 
-#### 多个字段同时校验并显示错误
+### 多个字段同时校验并显示错误
 显示如下，**注意：当`multiCheck`为`true`时，建议使用自定义`onMessage`**，[参考](./example/web/index.html)
 
 ![we-validator](./assets/demo_multi.png)

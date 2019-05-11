@@ -19,7 +19,7 @@ module.exports = {
   regex: {
     message: '不符合此验证规则',
     rule(value, param){
-      return !this.required(value) || param.test(value)
+      return param.test(value)
     }
   },
   /**
@@ -63,7 +63,7 @@ module.exports = {
   equalTo: {
     message: '输入值必须和字段 {0} 相同',
     rule(value, param){
-      return !this.required(value) || value === this.data[param]
+      return value === this.data[param]
     }
   },
   /**
@@ -72,7 +72,7 @@ module.exports = {
   notEqualTo: {
     message: '输入值不能和字段 {0} 相同',
     rule(value, param){
-      return !this.required(value) || value !== this.data[param]
+      return value !== this.data[param]
     }
   },
   /**
@@ -81,7 +81,7 @@ module.exports = {
   contains: {
     message: '输入值必须包含 {0}',
     rule(value, param){
-      return !this.required(value) || value.indexOf(param) > -1
+      return value.indexOf(param) > -1
     }
   },
   /**
@@ -90,7 +90,7 @@ module.exports = {
   notContains: {
     message: '输入值不能包含 {0}',
     rule(value, param){
-      return !this.required(value) || value.indexOf(param) === -1
+      return value.indexOf(param) === -1
     }
   },
   /**
@@ -99,7 +99,7 @@ module.exports = {
   length: {
     message: '请输入 {0} 个字符',
     rule(value, param){
-      return !this.required(value) || value.length == param
+      return value.length == param
     }
   },
   /**
@@ -108,7 +108,7 @@ module.exports = {
   minlength: {
     message: '最少要输入 {0} 个字符',
     rule(value, param){
-      return !this.required(value) || value.length >= param
+      return value.length >= param
     }
   },
   /**
@@ -117,7 +117,7 @@ module.exports = {
   maxlength: {
     message: '最多可以输入 {0} 个字符',
     rule(value, param){
-      return !this.required(value) || value.length <= param
+      return value.length <= param
     }
   },
   /**
@@ -126,7 +126,7 @@ module.exports = {
   rangelength: {
     message: '请输入长度在 {0} 到 {1} 之间的字符',
     rule(value, param){
-      return !this.required(value) || (value.length >= param[0] && value.length <= param[1])
+      return value.length >= param[0] && value.length <= param[1]
     }
   },
   /**
@@ -158,7 +158,7 @@ module.exports = {
     rule(value, param){
       if(typeof param === 'string') param = this.data[param]
       
-      return !this.required(value) || value >= param
+      return value >= param
     }
   },
   /**
@@ -169,7 +169,7 @@ module.exports = {
     rule(value, param){
       if(typeof param === 'string') param = this.data[param]
 
-      return !this.required(value) || value <= param
+      return value <= param
     }
   },
   /**
@@ -178,7 +178,7 @@ module.exports = {
   range: {
     message: '请输入大于 {0} 且小于 {1} 的数字',
     rule(value, param){
-      return !this.required(value) || (value >= param[0] && value <= param[1])
+      return value >= param[0] && value <= param[1]
     }
   },
   /**
@@ -194,7 +194,7 @@ module.exports = {
   minChinese: {
     message: '最少输入 {0} 个中文字符',
     rule(value, param){
-      return !this.required(value) || (new RegExp(`^[\u4e00-\u9fa5]{${param},}$`).test(value))
+      return new RegExp(`^[\u4e00-\u9fa5]{${param},}$`).test(value)
     }
   },
   /**
@@ -203,7 +203,7 @@ module.exports = {
   maxChinese: {
     message: '最多输入 {0} 个中文字符',
     rule(value, param){
-      return !this.required(value) || (new RegExp(`^[\u4e00-\u9fa5]{0,${param}}$`).test(value))
+      return new RegExp(`^[\u4e00-\u9fa5]{0,${param}}$`).test(value)
     }
   },
   /**
@@ -212,7 +212,7 @@ module.exports = {
   rangeChinese: {
     message: '只能输入 {0} 到 {1} 个中文字符',
     rule(value, param){
-      return !this.required(value) || (new RegExp(`^[\u4e00-\u9fa5]{${param[0]},${param[1]}}$`).test(value))
+      return new RegExp(`^[\u4e00-\u9fa5]{${param[0]},${param[1]}}$`).test(value)
     }
   },
   /**
@@ -221,7 +221,7 @@ module.exports = {
   date: {
     message: '请输入有效的日期',
     rule(value){
-      return !this.required(value) || !/Invalid|NaN/.test(new Date(value).toString())
+      return !/Invalid|NaN/.test(new Date(value).toString())
     }
   },
   /**
