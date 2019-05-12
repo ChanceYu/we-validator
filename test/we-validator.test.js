@@ -8,6 +8,9 @@ describe('testing: we-validator package', () => {
         expect(WeValidator.checkValue('required', '')).to.not.be.ok
         expect(WeValidator.checkValue('chinese', '好的')).to.be.ok
         expect(WeValidator.checkValue('chinese', 'a')).to.not.be.ok
+        expect(WeValidator.checkValue('mobile', '')).to.not.be.ok
+        expect(WeValidator.checkValue('mobile', '111')).to.not.be.ok
+        expect(WeValidator.checkValue('mobile', '15111111111')).to.be.ok
     })
 
     it('testing: addRule', () => {
@@ -18,6 +21,7 @@ describe('testing: we-validator package', () => {
         })
         expect(WeValidator.checkValue('theRuleName', '1')).to.be.ok
         expect(WeValidator.checkValue('theRuleName', 'a')).to.not.be.ok
+        expect(WeValidator.checkValue('theRuleName', '')).to.not.be.ok
     })
 
     it('testing: onMessage global', () => {
