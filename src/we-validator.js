@@ -3,7 +3,7 @@ import RULES from './rules'
 const requiredFn = RULES.required.rule
 
 /**
- * 环境检测：
+ * 环境检测
  */
 const isWx = typeof wx !== 'undefined' && !!wx.showToast // 微信小程序
 const isMy = typeof my !== 'undefined' && !!my.showToast // 支付宝小程序
@@ -32,7 +32,7 @@ class WeValidator {
      * @param {object} rules 验证字段的规则
      * @param {object} messages 验证字段错误的提示信息
      * @param {function} onMessage 错误提示显示方式
-     * @param {boolean} multiCheck 是否校验多个字段
+     * @param {boolean} multiCheck 是否同时校验多个字段
      */
     static defaultOptions = {
         rules: {},
@@ -81,6 +81,7 @@ class WeValidator {
      * 显示错误提示
      */
     _showErrorMessage(params, onMessage) {
+        // validatorInstance.checkData(data, onMessage)
         if(isFunction(onMessage)){
             return onMessage(params)
         }
@@ -113,18 +114,18 @@ class WeValidator {
 
         // 百度小程序
         if(isSwan){
-          return swan.showToast({
-              title: params.msg,
-              icon: 'none'
-          })
+            return swan.showToast({
+                title: params.msg,
+                icon: 'none'
+            })
         }
 
         // 头条小程序
         if(isTt){
-          return tt.showToast({
-              title: params.msg,
-              icon: 'none'
-          })
+            return tt.showToast({
+                title: params.msg,
+                icon: 'none'
+            })
         }
 
         // 浏览器端
@@ -207,23 +208,21 @@ class WeValidator {
                     value = data[attr]
                 }
 
-                let param = ruleParam
-
                 if(isFunction(ruleParam)){
-                  param = ruleParam.call(this, value)
+                  ruleParam = ruleParam.call(this, value)
                 }
 
-                let isFieldValid = WeValidator.checkValue.call(this, ruleName, value, param)
+                let isFieldValid = WeValidator.checkValue.call(this, ruleName, value, ruleParam)
 
                 if (!isFieldValid) {
                   // 验证不通过
-                  let msg = this._getErrorMessage(ruleName, attr, param)
+                  let msg = this._getErrorMessage(ruleName, attr, ruleParam)
 
                   if (showMessage && msg) {
                       let errorParam = {
                           name: attr,
                           value: value,
-                          param: param,
+                          param: ruleParam,
                           rule: ruleName,
                           msg: msg
                       }
