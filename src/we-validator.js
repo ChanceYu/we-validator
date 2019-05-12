@@ -90,6 +90,8 @@ class WeValidator {
 
     /**
      * 显示错误提示
+     * @param {object} params 错误信息
+     * @param {function} onMessage 自定义提示函数
      */
     _showErrorMessage(params, onMessage) {
         // validatorInstance.checkData(data, onMessage)
@@ -145,6 +147,9 @@ class WeValidator {
 
     /**
      * 获取错误提示内容
+     * @param {string} ruleName 规则名称
+     * @param {string} attr 字段名称
+     * @param {any} param 规则参数
      */
     _getErrorMessage(ruleName, attr, param){
       let messages = this.options.messages
@@ -169,6 +174,8 @@ class WeValidator {
 
     /**
      * 验证配置规则是否无效
+     * @param {string} ruleName 规则名称
+     * @param {string} attr 字段名称
      */
     _isRuleInvalid(ruleName, attr) {
         if (!WeValidator.RULES.hasOwnProperty(ruleName)) {
@@ -225,12 +232,15 @@ class WeValidator {
 
                 let isFieldValid = WeValidator.checkValue.call(this, ruleName, value, ruleParam, true)
 
+                // 验证不通过
                 if (!isFieldValid) {
-                  // 验证不通过
+                  hasError = true
+
                   let msg = this._getErrorMessage(ruleName, attr, ruleParam)
+                  let errorParam = null
 
                   if (showMessage && msg) {
-                      let errorParam = {
+                      errorParam = {
                           name: attr,
                           value: value,
                           param: ruleParam,
@@ -238,11 +248,13 @@ class WeValidator {
                           msg: msg
                       }
                       errorData[attr] = errorParam
-
-                      if(!multiCheck) this._showErrorMessage(errorParam, onMessage)
                   }
-                  hasError = true
-                  if(!multiCheck) return false
+                  
+                  if(!multiCheck){
+                    errorParam && this._showErrorMessage(errorParam, onMessage)
+                    return false
+                  }
+                  
                 }
             }
         }
