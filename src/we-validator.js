@@ -47,12 +47,14 @@ class WeValidator {
     static RULES = {}
 
     /**
-     * 动态添加验证规则（全局）
+     * 动态添加验证规则
      * @param {string} ruleName 规则名称
-     * @param {regexp|function} ruleValue 验证规则
+     * @param {object} ruleOption 规则配置
+     * @param {string} [ruleOption.message] 默认错误提示文字
+     * @param {regexp|function} [ruleOption.rule] 验证规则
      */
-    static addRule = function (ruleName, ruleValue) {
-        WeValidator.RULES[ruleName] = ruleValue
+    static addRule = function (ruleName, ruleOption) {
+        WeValidator.RULES[ruleName] = ruleOption
     }
 
     /**
@@ -60,19 +62,28 @@ class WeValidator {
      * @param {string} ruleName 规则名称
      * @param {string} value 要验证的值
      * @param {any} param 传递的验证参数
+     * @param {boolean} skip 未填跳过校验，仅供内部使用
      */
-    static checkValue = function (ruleName, value, param){
+    static checkValue = function (ruleName, value, param, skip){
       let rule = WeValidator.RULES[ruleName].rule
 
       if(isRegExp(rule)){
-        return !requiredFn(value) || rule.test(value)
+        if(skip){
+          return !requiredFn(value) || rule.test(value)
+        }else{
+          return rule.test(value)
+        }
       }
 
       if(isFunction(rule)){
         if(ruleName === 'required'){
           return requiredFn(value)
         }else{
-          return !requiredFn(value) || rule.call(this, value, param)
+          if(skip){
+            return !requiredFn(value) || rule.call(this, value, param)
+          }else{
+            return rule.call(this, value, param)
+          }
         }
       }
     }
@@ -212,7 +223,7 @@ class WeValidator {
                   ruleParam = ruleParam.call(this, value)
                 }
 
-                let isFieldValid = WeValidator.checkValue.call(this, ruleName, value, ruleParam)
+                let isFieldValid = WeValidator.checkValue.call(this, ruleName, value, ruleParam, true)
 
                 if (!isFieldValid) {
                   // 验证不通过
@@ -237,7 +248,7 @@ class WeValidator {
         }
 
         if(hasError){
-          if(multiCheck){
+          if(multiCheck && showMessage){
             this._showErrorMessage(errorData, onMessage)
           }
           return false
