@@ -117,6 +117,7 @@ Page({
 - [原生微信小程序使用方式](./example/wechat/pages/index/index.js)
 - [mpvue 使用方式](./example/mpvue/src/pages/index/index.vue)
 - [web 浏览器使用方式](./example/web/index.html)
+- [Nodejs 端使用方式](./example/nodejs/server/router/home.js)
 - [复杂的校验案例-自定义规则](./example/complex/index.html)
 
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>we-validator (nodejs端校验)</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        form{
+            margin: 10px;
+        }
+        input{
+            margin: 10px 0;
+            padding: 10px 0;
+            text-indent: 10px;
+            border: 1px solid #eee;
+            font-size: 16px;
+            display: block;
+            width: 100%;
+        }
+
+        p{
+          color: red;
+          font-size: 12px;
+          margin-bottom: 20px;
+        }
+
+        button{
+            padding: 10px 0;
+            width: 100%;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <form id="submitForm">
+        <input type="text" name="username" placeholder="用户名" />
+        <p id="username"></p>
+        
+        <input type="password" name="pwd" placeholder="密码" />
+        <p id="pwd"></p>
+
+        <input type="password" name="repeatPwd" placeholder="确认密码" />
+        <p id="repeatPwd"></p>
+
+        <input type="number" name="phoneno" placeholder="手机号" />
+        <p id="phoneno"></p>
+
+        <input type="text" name="str" placeholder="中文 1-4 位" />
+        <p id="str"></p>
+
+        <button id="submitButton" type="button">提交</button>
+    </form>
+
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/form-serializer/dist/jquery.serialize-object.min.js"></script>
+
+    <script>
+        /**
+         * 注意：此demo比较简单，请结合实际项目修改
+         */
+        var submitForm = document.getElementById('submitForm');
+        var submitButton = document.getElementById('submitButton');
+
+        submitButton.onclick = function(){
+            var data = $(submitForm).serializeObject();
+
+            clearError();
+
+            // nodejs 端校验
+            $.post('/form', data).then((res) => {
+
+              if(res.status === 'success'){
+                console.log('校验通过')
+                alert('校验通过')
+              }else{
+                var errors = res.errors
+
+                for(var name in errors){
+                  let ele = document.getElementById(name)
+
+                  if(ele){
+                    ele.innerHTML = errors[name].msg
+                  }
+                }
+              }
+
+            })
+            
+            return false
+        }
+
+        function clearError(){
+          var eles = document.querySelectorAll('p')
+
+          eles = [].slice.call(eles)
+
+          for(var i = 0; i < eles.length; i++){
+            eles[i].innerHTML = ''
+          }
+        }
+    </script>
+</body>
+</html>

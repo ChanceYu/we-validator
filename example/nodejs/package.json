@@ -1,0 +1,15 @@
+{
+  "name": "axios-storage-example",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "koa": "^2.5.1",
+    "koa-bodyparser": "^3.2.0",
+    "koa-router": "^7.4.0",
+    "koa-views": "^5.2.1",
+    "we-validator": "^2.1.5"
+  }
+}
