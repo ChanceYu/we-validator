@@ -10,6 +10,6 @@
     "koa-bodyparser": "^3.2.0",
     "koa-router": "^7.4.0",
     "koa-views": "^5.2.1",
-    "we-validator": "^2.1.6"
+    "we-validator": "^2.1.7"
   }
 }
