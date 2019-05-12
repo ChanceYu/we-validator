@@ -186,7 +186,7 @@ module.exports = {
    */
   chinese: {
     message: '只能输入中文字符',
-    rule: /^[\u4e00-\u9fa5]{0,}$/
+    rule: /^[\u4e00-\u9fa5]+$/
   },
   /**
    * 最少多少个中文字符
@@ -203,7 +203,7 @@ module.exports = {
   maxChinese: {
     message: '最多输入 {0} 个中文字符',
     rule(value, param){
-      return new RegExp(`^[\u4e00-\u9fa5]{0,${param}}$`).test(value)
+      return new RegExp(`^[\u4e00-\u9fa5]{1,${param}}$`).test(value)
     }
   },
   /**

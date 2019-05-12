@@ -20,25 +20,19 @@ const isRegExp = (v) => (objString.call(v) === '[object RegExp]')
 
 class WeValidator {
 
+    /**
+     * 默认参数
+     * @param {object} options
+     * @param {object} [options.rules] 验证字段的规则
+     * @param {object} [options.messages] 验证字段错误的提示信息
+     * @param {function} [options.onMessage] 错误提示显示方式
+     * @param {boolean} [options.multiCheck] 是否同时校验多个字段
+     */
     constructor(options = {}) {
-        this.options = Object.assign({}, WeValidator.defaultOptions, options)
+        this.options = options
 
         this.required = requiredFn
         this._checkAllRules()
-    }
-
-    /**
-     * 默认参数
-     * @param {object} rules 验证字段的规则
-     * @param {object} messages 验证字段错误的提示信息
-     * @param {function} onMessage 错误提示显示方式
-     * @param {boolean} multiCheck 是否同时校验多个字段
-     */
-    static defaultOptions = {
-        rules: {},
-        messages: {},
-        onMessage: null,
-        multiCheck: false
     }
 
     /**
