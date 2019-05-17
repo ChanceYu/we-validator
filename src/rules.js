@@ -10,7 +10,7 @@ module.exports = {
       }else if(typeof value === 'boolean'){
         return true
       }
-      return value && value.length > 0
+      return !!(value && value.length > 0)
     }
   },
   /**
