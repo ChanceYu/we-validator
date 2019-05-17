@@ -39,19 +39,19 @@
 <body>
     <form id="submitForm">
         <input type="text" name="username" placeholder="用户名" />
-        <p id="username"></p>
+        <p class="error-box" id="username"></p>
         
         <input type="password" name="pwd" placeholder="密码" />
-        <p id="pwd"></p>
+        <p class="error-box" id="pwd"></p>
 
         <input type="password" name="repeatPwd" placeholder="确认密码" />
-        <p id="repeatPwd"></p>
+        <p class="error-box" id="repeatPwd"></p>
 
         <input type="number" name="phoneno" placeholder="手机号" />
-        <p id="phoneno"></p>
+        <p class="error-box" id="phoneno"></p>
 
         <input type="text" name="str" placeholder="中文 1-4 位" />
-        <p id="str"></p>
+        <p class="error-box" id="str"></p>
 
         <button id="submitButton" type="button">提交</button>
     </form>
@@ -64,20 +64,15 @@
         /**
          * 注意：此demo比较简单，请结合实际项目修改
          */
-        var submitForm = document.getElementById('submitForm');
-        var submitButton = document.getElementById('submitButton');
         
         var validatorInstance = new WeValidator({
             multiCheck: true,
             onMessage: function(data){
+              console.log('onMessage');
               console.log(data);
               
               for(var name in data){
-                let ele = document.getElementById(name)
-
-                if(ele){
-                  ele.innerHTML = data[name].msg
-                }
+                $('#' + name).html(data[name].msg)
               }
             },
             rules: {
@@ -117,27 +112,18 @@
             }
         });
 
-        submitButton.onclick = function(){
-            var data = $(submitForm).serializeObject();
+        // 提交
+        $('#submitButton').on('click', function(){
+          var data = $('#submitForm').serializeObject();
 
-            console.log(data)
-            clearError()
-            if (!validatorInstance.checkData(data)) return;
+          console.log(data)
 
-            console.log('开始提交');
-            
-            return false
-        }
+          $('.error-box').html('')
 
-        function clearError(){
-          var eles = document.querySelectorAll('p')
+          if (!validatorInstance.checkData(data)) return;
 
-          eles = [].slice.call(eles)
-
-          for(var i = 0; i < eles.length; i++){
-            eles[i].innerHTML = ''
-          }
-        }
+          console.log('开始提交');
+        })
     </script>
 </body>
 </html>
