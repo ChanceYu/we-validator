@@ -43,7 +43,7 @@ npm install we-validator --save
 <script src="https://unpkg.com/we-validator/lib/we-validator.js"></script>
 ```
 
-也可以直接引入 lib 目录下的 `we-validator.js` 到项目
+也可以直接引入 `lib` 目录下的 `we-validator.js` 到项目
 
 
 ## 使用
@@ -118,7 +118,7 @@ Page({
 - [mpvue 使用方式](./example/mpvue/src/pages/index/index.vue)
 - [web 浏览器使用方式](./example/web/index.html)
 - [Nodejs 端使用方式](./example/nodejs/server/router/home.js)
-- [复杂的校验案例-自定义规则](./example/complex/index.html)
+- [复杂的校验案例-自定义规则-动态添加字段校验](./example/complex/index.html)
 
 
 ## API
@@ -149,7 +149,7 @@ Page({
 | `tel: true` | 座机号<br>例如：010-1234567、0551-1234567 | 请输入座机号 |
 | `url: true` | URL网址 | 请输入有效的网址 |
 | `idcard: true` | 身份证号 | 请输入18位的有效身份证 |
-| `equalTo: 'field'` | 字段值相同校验<br>例如：密码和确认密码，[参考](./example/web/index.html#L90) | 输入值必须和字段 `field` 相同 |
+| `equalTo: 'field'` | 字段值相同校验<br>例如：密码和确认密码，[参考](./example/web/index.html#L82) | 输入值必须和字段 `field` 相同 |
 | `notEqualTo: 'field'` | 字段值不能相同校验<br>与 `equalTo` 相反 | 输入值不能和字段 `field` 相同 |
 | `contains: 'str'` | 是否包含某字符 | 输入值必须包含 `str` |
 | `notContains: 'str'` | 不能包含某字符 | 输入值不能包含 `str` |
@@ -160,7 +160,7 @@ Page({
 | `number: true` | 数字 | 请输入有效的数字 |
 | `digits: true` | 正整数数字 | 只能输入正整数数字 |
 | `integer: true` | 正整数或负整数数字 | 只能输入整数数字 |
-| `min: 3` | 大于多少的数字<br>（最小只能多少），也可以比较字段的值，[参考](./example/complex/index.html#L172) | 请输入大于 `3` 的数字 |
+| `min: 3` | 大于多少的数字<br>（最小只能多少），也可以比较字段的值，[参考](./example/complex/index.html#L180) | 请输入大于 `3` 的数字 |
 | `max: 9` | 小于多少的数字<br>（最大只能多少），也可以比较字段的值 | 请输入小于 `9` 的数字 |
 | `range: [3, 9]` | 大于且小于多少的数字 | 请输入大于 `3` 且小于 `9` 的数字 |
 | `chinese: true` | 中文字符 | 只能输入中文字符 |
@@ -217,7 +217,7 @@ new WeValidator({
 </details>
 
 ### .checkData(data, onMessage)
-校验数据
+校验数据，校验通过返回 `true`
 
 **返回**: <code>boolean</code>
 
@@ -227,7 +227,7 @@ new WeValidator({
 | onMessage | <code>function</code> |  | 自定义错误消息提示，[详情](#wevalidatoronmessage) |
 
 ### .isValid(data)
-校验数据是否有效，无提示
+校验数据是否有效，无提示，校验通过返回 `true`
 
 **返回**: <code>boolean</code>
 
@@ -236,7 +236,7 @@ new WeValidator({
 | data | <code>object</code> |  | 需要校验的表单数据 |
 
 ### .addRules(options)
-动态添加字段校验
+动态添加字段校验，可参考[复杂的校验案例-自定义规则-动态添加字段校验](./example/complex/index.html#L235)
 
 `options` 参数和实例化 `new WeValidator(options)` 一样，[详情](#new-wevalidatoroptions)
 
@@ -291,7 +291,7 @@ validatorInstance.removeRules(['username'])
 ```
 
 ## WeValidator.addRule(ruleName, ruleOption)
-静态方法：添加自定义规则，可参考[复杂的校验案例-自定义规则](./example/complex/index.html)
+静态方法：添加自定义规则，可参考[复杂的校验案例-自定义规则-动态添加字段校验](./example/complex/index.html)
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
