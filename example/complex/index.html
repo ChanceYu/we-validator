@@ -74,6 +74,7 @@
               <li>爱好：可选，如果选择最少选择两项</li>
               <li>携带人员：必须选爸，不能同时选哥和弟，也不能同时选姐和妹</li>
               <li>喜欢的姓名：可选，不能输入 张三</li>
+              <li>性别：选择男性必须输入你的姓名</li>
           </ul>
         </div>
       
@@ -120,6 +121,18 @@
             <input type="text" name="userName" />
         </div>
         <p class="error-box" id="userName"></p>
+      
+        <div class="control-box">
+            <label class="lbl">性别：</label>
+            <label><input name="gender" type="radio" value="1" />男</label>&nbsp;
+            <label><input name="gender" type="radio" value="0" />女</label>
+        </div>
+        <p class="error-box" id="gender"></p>
+        <div class="control-box">
+            <label class="lbl">你的的姓名：</label>
+            <input type="text" name="yourName" />
+        </div>
+        <p class="error-box" id="yourName"></p>
 
         <button id="submitButton" type="button">提交</button>
     </form>
@@ -132,8 +145,6 @@
         /**
          * 注意：此demo比较简单，请结合实际项目修改
          */
-        var submitForm = document.getElementById('submitForm');
-        var submitButton = document.getElementById('submitButton');
 
         // 必须以字母 a 开头
         WeValidator.addRule('startA', {
@@ -151,14 +162,11 @@
         var validatorInstance = new WeValidator({
             multiCheck: true,
             onMessage: function(data){
+              console.log('onMessage');
               console.log(data);
               
               for(var name in data){
-                let ele = document.getElementById(name)
-
-                if(ele){
-                  ele.innerHTML = data[name].msg
-                }
+                $('#' + name).html(data[name].msg)
               }
             },
             rules: {
@@ -210,27 +218,44 @@
             }
         });
 
-        submitButton.onclick = function(){
-            var data = $(submitForm).serializeObject();
+        // 提交
+        $('#submitButton').on('click', function(){
+          var data = $('#submitForm').serializeObject();
 
-            console.log(data)
-            clearError()
-            if (!validatorInstance.checkData(data)) return;
+          console.log(data)
 
-            console.log('开始提交');
-            
-            return false
-        }
+          $('.error-box').html('')
 
-        function clearError(){
-          var eles = document.querySelectorAll('.error-box')
+          if (!validatorInstance.checkData(data)) return;
 
-          eles = [].slice.call(eles)
+          console.log('开始提交');
+        })
 
-          for(var i = 0; i < eles.length; i++){
-            eles[i].innerHTML = ''
+
+        // 动态添加字段校验
+        // 选择男性必须输入你的姓名
+        $('[name=gender]').on('change', function(ev){
+          var val = $(this).val()
+
+          // 选择男性
+          if(val == '1'){
+            validatorInstance.addRules({
+              rules: {
+                yourName: {
+                  required: true
+                }
+              },
+              messages: {
+                yourName: {
+                  required: '选择男性，必须输入你的姓名'
+                }
+              }
+            })
+          }else{
+            // 选择女性
+            validatorInstance.removeRules(['yourName'])
           }
-        }
+        })
     </script>
 </body>
 </html>
