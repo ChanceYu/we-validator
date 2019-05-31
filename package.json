@@ -1,6 +1,6 @@
 {
   "name": "we-validator",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "简单灵活的表单验证插件，支持小程序、浏览器、Nodejs",
   "main": "lib/we-validator.js",
   "scripts": {
@@ -9,6 +9,10 @@
     "test": "mocha test/*.js",
     "prepublish": "npm run build"
   },
+  "files": [
+    "lib",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/ChanceYu/we-validator.git"
@@ -23,7 +27,7 @@
     "weapp-validator",
     "node-validator"
   ],
-  "author": "ChanceYu",
+  "author": "ChanceYu <i.fish@foxmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
