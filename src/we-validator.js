@@ -11,7 +11,6 @@ const isSwan = typeof swan !== 'undefined' && !!swan.showToast // 百度智能�
 const isTt = typeof tt !== 'undefined' && !!tt.showToast // 头条小程序
 const isBrowser = typeof window !== 'undefined' && !!window.alert  // 普通浏览器
 
-
 const objString = Object.prototype.toString
 
 const isArray = Array.isArray || ((v) => objString.call(v) === '[object Array]')
@@ -25,7 +24,7 @@ class WeValidator {
      * @param {object} options
      * @param {object} [options.rules] 验证字段的规则
      * @param {object} [options.messages] 验证字段错误的提示信息
-     * @param {function} [options.onMessage] 错误提示显示方式
+     * @param {function} [options.onMessage] 错误信息显示方式
      * @param {boolean} [options.multiCheck] 是否同时校验多个字段
      */
     constructor(options = {}) {
@@ -44,7 +43,7 @@ class WeValidator {
      * 动态添加验证规则
      * @param {string} ruleName 规则名称
      * @param {object} ruleOption 规则配置
-     * @param {string} [ruleOption.message] 默认错误提示文字
+     * @param {string} [ruleOption.message] 默认错误信息文字
      * @param {regexp|function} [ruleOption.rule] 验证规则
      */
     static addRule = function (ruleName, ruleOption) {
@@ -83,7 +82,7 @@ class WeValidator {
     }
 
     /**
-     * 显示错误提示
+     * 显示错误信息
      * @param {object} params 错误信息
      * @param {function} onMessage 自定义提示函数
      */
@@ -140,7 +139,7 @@ class WeValidator {
     }
 
     /**
-     * 获取错误提示内容
+     * 获取错误信息内容
      * @param {string} ruleName 规则名称
      * @param {string} attr 字段名称
      * @param {any} param 规则参数
@@ -194,12 +193,13 @@ class WeValidator {
     }
 
     /**
-     * 验证表单数据
+     * 校验数据，会验证所有配置的字段规则
      * @param {object} data 验证的数据对象
-     * @param {function} onMessage 自定义错误提示函数
-     * @param {boolean} showMessage 是否显示提示信息，默认显示
+     * @param {function} onMessage 自定义错误信息提示
+     * @param {boolean} showMessage 是否显示提示信息，默认显示（内部使用）
+     * @param {object} fieldMap 校验的字段，默认校验所有字段（内部使用）
      */
-    checkData(data, onMessage, showMessage = true) {
+    checkData(data, onMessage, showMessage = true, fieldMap) {
         let _rules_ = this.options.rules
         let multiCheck = this.options.multiCheck
         let hasError = false
@@ -209,9 +209,16 @@ class WeValidator {
 
         // 遍历字段
         for (let attr in _rules_) {
+            if(fieldMap && !fieldMap.hasOwnProperty(attr)) continue
+          
             // 遍历验证规则
             for (let ruleName in _rules_[attr]) {
                 if (this._isRuleInvalid(ruleName, attr)) continue
+
+                if(fieldMap){
+                  let res = fieldMap[attr]
+                  if(isArray(res) && res.indexOf(ruleName) === -1) continue
+                }
 
                 let ruleParam = _rules_[attr][ruleName]
                 let value = ''
@@ -248,7 +255,6 @@ class WeValidator {
                     errorParam && this._showErrorMessage(errorParam, onMessage)
                     return false
                   }
-                  
                 }
             }
         }
@@ -261,6 +267,53 @@ class WeValidator {
         }
 
         return true
+    }
+
+    /**
+     * 校验数据，只校验对应的字段规则
+     * @param {object} data 验证的数据对象
+     * @param {array} fields 校验的字段
+     * @param {function} onMessage 自定义错误信息提示
+     * @param {boolean} showMessage 是否显示提示信息，默认显示（内部使用）
+     */
+    checkFields(data, fields, onMessage, showMessage = true) {
+      if(!isArray(fields)) throw new Error('第二个参数须为数组')
+
+      // fields: [ '[field]:[rule]' ]
+      // fields: [ 'phoneNo' ]  =>  { phoneNo: true }
+      // fields: [ 'phoneNo:required' ]  =>  { phoneNo: ['required'] }
+      // fields: [ 'phoneNo:required,mobile' ]  =>  { phoneNo: ['required', 'mobile'] }
+      let fieldMap = {}
+
+      fields.forEach((item) => {
+        let arr = item.split(':')
+        let field = arr[0]
+        let rules = arr[1]
+
+        if(rules){
+          // 只校验特定规则
+          rules = rules.split(',')
+          fieldMap[field] = rules
+        }else{
+          // 校验 field 字段的所有规则
+          fieldMap[field] = true
+        }
+      })
+      
+      return this.checkData(data, onMessage, showMessage, fieldMap)
+    }
+
+    /**
+     * 校验数据，不会提示错误信息
+     * @param {object} data 验证的数据对象
+     * @param {array} fields 校验的字段。如果有，只校验对应的字段规则，默认校验所有配置的字段规则
+     */
+    isValid(data, fields) {
+      if(isArray(fields)){
+        return this.checkFields(data, fields, null, false)
+      }else{
+        return this.checkData(data, null, false)
+      }
     }
 
     /**
@@ -288,14 +341,6 @@ class WeValidator {
 
         delete this.options.rules[key]
       }
-    }
-
-    /**
-     * 校验数据是否有效，不提示错误信息
-     * @param {object} data 验证的数据对象
-     */
-    isValid(data) {
-      return this.checkData(data, null, false)
     }
 
 }
