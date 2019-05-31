@@ -6,11 +6,12 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const packageJSON = require('./package.json');
 
-const getConfig = function (outputPath) {
+const getConfig = function (outputPath, min) {
     let config = {
         entry: path.join(__dirname, 'src/we-validator.js'),
         output: {
-            filename: 'we-validator.js',
+            path: outputPath,
+            filename: min ? 'we-validator.min.js' : 'we-validator.js',
             library: 'WeValidator',
             libraryTarget: 'umd',
             umdNamedDefine: true
@@ -38,7 +39,7 @@ license: ${packageJSON.license}`)
         }
     }
 
-    if(isProduction){
+    if(min){
         config.plugins.push(
             new webpack.optimize.UglifyJsPlugin({
                 warnings: false,
@@ -48,12 +49,17 @@ license: ${packageJSON.license}`)
         )
     }
 
-    config.output.path = outputPath
-
     return config
 }
 
-module.exports = [
-    getConfig(path.join(__dirname, 'lib')),
-    getConfig(path.join(__dirname, 'example/wechat/js'))
+let configs = [
+  getConfig(path.join(__dirname, 'lib')),
+  getConfig(path.join(__dirname, 'example/wechat/js'))
 ]
+
+if(isProduction){
+  configs.push( getConfig(path.join(__dirname, 'dist')) )
+  configs.push( getConfig(path.join(__dirname, 'dist'), true) )
+}
+
+module.exports = configs
