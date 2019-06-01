@@ -96,7 +96,7 @@ Page({
                     required: '请输入手机号',
                     mobile: '手机号格式不正确'
                 },
-                str: {
+                str: { // 非必填字段
                     length: '请输入长度为3的字符串'
                 },
             },
@@ -129,13 +129,13 @@ Page({
 ## Static API
  - [WeValidator](#static-api)
     - [.addRule(ruleName, ruleOption)](#wevalidatoraddrulerulename-ruleoption) 添加自定义规则
-    - [.checkValue(ruleName, value, param)](#wevalidatorcheckvaluerulename-value-param) 单独校验某个内容
+    - [.checkValue(ruleName, value, param)](#wevalidatorcheckvaluerulename-value-param) 函数校验，单独校验某个内容
     - [.onMessage](#wevalidatoronmessage) 设置全局错误信息显示
 
 
 ## 默认支持的规则
 
-> 具体规则内容可[查看源码](./src/rules.js)
+> 注意: 非必填字段只有字段有值才会校验配置的规则
 
 | 规则 | 描述 | 默认提示 |
 | --- | --- | --- |
@@ -297,7 +297,7 @@ validatorInstance.addRules({
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| fields | <code>Array</code> |  | 需要移除校验的表单字段 |
+| fields | <code>array</code> |  | 需要移除校验的表单字段 |
 
 ```javascript
 validatorInstance.removeRules(['username'])
@@ -354,6 +354,12 @@ WeValidator.checkValue('theRuleName', 'str')
 
 ## WeValidator.checkValue(ruleName, value, param)
 > 静态方法：函数校验
+
+| 参数 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| ruleName | <code>string</code> |  | 规则名称 |
+| value | <code>string</code> |  | 需要校验的内容 |
+| param | <code>any</code> |  | 传递给规则参数 |
 
 支持所有[默认支持的规则](#默认支持的规则)，也支持自定义的规则。
 
