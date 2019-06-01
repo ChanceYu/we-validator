@@ -11,7 +11,7 @@
 
 简单灵活的表单验证插件，支持小程序、浏览器、Nodejs。小程序端支持：微信、支付宝、百度智能、字节跳动，小程序默认提示使用 `showToast`。
 
-[API 文档](#api) | [示例 Examples](#examples)，如果你 :sparkling_heart: 就点击 **Star** 吧。
+[API 文档](#api) | [示例 Examples](#examples)，如果你 :sparkling_heart: 就点击 **★Star** 吧。
 
 ## 特点
 
