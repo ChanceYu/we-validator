@@ -224,9 +224,9 @@ new WeValidator({
 | onMessage | <code>function</code> |  | 自定义错误信息提示，[详情](#wevalidatoronmessage) |
 
 ### .checkFields(data, fields, onMessage)
-> 校验数据，会显示错误信息，只校验对应的字段
+> 校验数据，会显示错误信息，只校验对应的字段，[参考](./example/mpvue/src/pages/index/index.vue)。
 
-通常用于单独校验一个或多个字段规则，使用场景例如：表单中某些字段校验通过按钮才可点击的场景，[参考](./example/mpvue/src/pages/index/index.vue)。
+通常用于单独校验一个或多个字段规则
 
 **返回**: <code>boolean</code>
 
@@ -238,6 +238,8 @@ new WeValidator({
 
 ### .isValid(data, fields)
 > 校验数据是否有效，不会提示错误信息
+
+使用场景例如：表单中某些字段校验通过按钮才可点击的场景，[参考](./example/mpvue/src/pages/index/index.vue)。
 
 **返回**: <code>boolean</code>
 
@@ -293,7 +295,7 @@ validatorInstance.addRules({
 </details>
 
 ### .removeRules(fields)
-> 动态移除字段校验
+> 动态移除字段校验，[参考](./example/complex/index.html#L235)
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
@@ -304,7 +306,7 @@ validatorInstance.removeRules(['username'])
 ```
 
 ## WeValidator.addRule(ruleName, ruleOption)
-> 静态方法：添加自定义规则，可[参考](./example/complex/index.html)
+> 静态方法：添加自定义规则，[参考](./example/complex/index.html)
 
 | 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
@@ -364,8 +366,14 @@ WeValidator.checkValue('theRuleName', 'str')
 支持所有[默认支持的规则](#默认支持的规则)，也支持自定义的规则。
 
 ```javascript
-let b1 = WeValidator.checkValue('min', 'str', 6) // 不能小于6的数字
-let b2 = WeValidator.checkValue('range', 'str', [2, 5]) // 大于2小于5的数字
+ // 必填
+let b1 = WeValidator.checkValue('required', 'str') // true
+
+// 不能小于6的数字
+let b2 = WeValidator.checkValue('min', 'str', 6) // false
+
+// 大于2小于5的数字
+let b3 = WeValidator.checkValue('range', 'str', [2, 5]) // false
 ```
 
 ## WeValidator.onMessage
