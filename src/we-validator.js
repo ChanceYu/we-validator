@@ -8,7 +8,7 @@ const requiredFn = RULES.required.rule
 const isWx = typeof wx !== 'undefined' && !!wx.showToast // 微信小程序
 const isMy = typeof my !== 'undefined' && !!my.showToast // 支付宝小程序
 const isSwan = typeof swan !== 'undefined' && !!swan.showToast // 百度智能小程序
-const isTt = typeof tt !== 'undefined' && !!tt.showToast // 头条小程序
+const isTt = typeof tt !== 'undefined' && !!tt.showToast // 字节跳动小程序
 const isBrowser = typeof window !== 'undefined' && !!window.alert  // 普通浏览器
 
 const objString = Object.prototype.toString
@@ -126,7 +126,7 @@ class WeValidator {
             })
         }
 
-        // 头条小程序
+        // 字节跳动小程序
         if(isTt){
             return tt.showToast({
                 title: params.msg,
