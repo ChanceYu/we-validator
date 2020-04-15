@@ -5,6 +5,10 @@
 ## Released
 
 
+### [v2.1.11](https://github.com/ChanceYu/we-validator/releases/tag/v2.2.0)
+- 修复：手机号以 `16` 开头的校验问题[issue](https://github.com/ChanceYu/we-validator/issues/12)
+
+
 ### [v2.1.10](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.10)
 - 新增：`.checkFields` 方法，可校验对应的字段，[参考](./README.md#checkfieldsdata-fields-onmessage)
 - 修改：`.isValid` 方法，可校验对应的字段，[参考](./README.md#isvaliddata-fields)
