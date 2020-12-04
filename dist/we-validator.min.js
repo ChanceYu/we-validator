@@ -1,6 +1,6 @@
 /*!
  * we-validator
- * version: 2.1.12
+ * version: 2.1.14
  * address: https://github.com/ChanceYu/we-validator#readme
  * author:  ChanceYu <i.fish@foxmail.com>
  * license: MIT
