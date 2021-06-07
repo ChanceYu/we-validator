@@ -5,6 +5,10 @@
 ## Released
 
 
+### [v2.1.15](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.15)
+- 修复：部分ts定义错误[issue](https://github.com/ChanceYu/we-validator/issues/15)
+
+
 ### [v2.1.14](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.14)
 - 新增：添加ts的定义文件[merge](https://github.com/ChanceYu/we-validator/pull/14)
 
