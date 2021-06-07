@@ -4,7 +4,7 @@
 <p align="center">
   <a href="https://travis-ci.org/ChanceYu/we-validator"><img src="https://img.shields.io/travis/ChanceYu/we-validator/master.svg?color=green&style=popout-square" /></a>
   <a href="https://opensource.org/licenses/mit-license.php"><img src="https://img.shields.io/npm/l/we-validator.svg?color=blue&style=popout-square" /></a>
-  <a href="https://www.npmjs.com/package/we-validator"><img src="https://img.shields.io/npm/v/we-validator.svg?color=red&style=popout-square" /></a>
+  <a href="https://www.npmjs.com/package/we-validator"><img src="https://img.shields.io/npm/v/we-validator.svg?color=green&style=popout-square" /></a>
 </p>
 
 > 2.x 和 1.x 版本有所差别，如果您继续使用老版本，可以查看 [1.x 版本](https://github.com/ChanceYu/we-validator/tree/v1)。如果您要升级到 2.x 请先阅读[升级指南](./UPGRADE.md)，推荐使用 2.x 版本。
