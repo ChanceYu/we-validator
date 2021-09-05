@@ -148,7 +148,7 @@ class WeValidator {
       let messages = this.options.messages
       let defaultMessage = WeValidator.RULES[ruleName].message
 
-      if(messages.hasOwnProperty(attr) && messages[attr][ruleName]){
+      if(messages && messages.hasOwnProperty(attr) && messages[attr][ruleName]){
         defaultMessage = messages[attr][ruleName]
       }
 
@@ -252,7 +252,9 @@ class WeValidator {
                   }
                   
                   if(!multiCheck){
-                    errorParam && this._showErrorMessage(errorParam, onMessage)
+                    if (errorParam) {
+                      this._showErrorMessage(errorParam, onMessage);
+                    }
                     return false
                   }
                 }
