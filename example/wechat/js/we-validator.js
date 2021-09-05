@@ -1,6 +1,6 @@
 /*!
  * we-validator
- * version: 2.1.15
+ * version: 2.1.16
  * address: https://github.com/ChanceYu/we-validator#readme
  * author:  ChanceYu <i.fish@foxmail.com>
  * license: MIT
@@ -238,7 +238,7 @@ var WeValidator = function () {
       var messages = this.options.messages;
       var defaultMessage = WeValidator.RULES[ruleName].message;
 
-      if (messages.hasOwnProperty(attr) && messages[attr][ruleName]) {
+      if (messages && messages.hasOwnProperty(attr) && messages[attr][ruleName]) {
         defaultMessage = messages[attr][ruleName];
       }
 
@@ -354,7 +354,9 @@ var WeValidator = function () {
             }
 
             if (!multiCheck) {
-              errorParam && this._showErrorMessage(errorParam, onMessage);
+              if (errorParam) {
+                this._showErrorMessage(errorParam, onMessage);
+              }
               return false;
             }
           }
@@ -484,7 +486,7 @@ WeValidator.checkValue = function (ruleName, value, param, skip) {
 
   if (isFunction(rule)) {
     if (ruleName === 'required') {
-      return requiredFn(value);
+      return param && requiredFn(value);
     } else {
       if (skip) {
         return !requiredFn(value) || rule.call(this, value, param);
@@ -542,7 +544,7 @@ module.exports = {
    * 手机号码
    */
   mobile: {
-    message: '请输入11位的手机号码',
+    message: '请输入 11 位的手机号码',
     rule: /^1[3456789]\d{9}$/
   },
   /**
@@ -563,7 +565,7 @@ module.exports = {
    * 身份证号
    */
   idcard: {
-    message: '请输入18位的有效身份证',
+    message: '请输入 18 位的有效身份证',
     rule: /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
   },
   /**
@@ -737,21 +739,21 @@ module.exports = {
    * 日期（ISO标准格式）例如：2019-09-19，2019/09/19
    */
   dateISO: {
-    message: '请输入有效的日期（ISO标准格式）',
+    message: '请输入有效的日期（ISO 标准格式）',
     rule: /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/
   },
   /**
    * ipv4地址
    */
   ipv4: {
-    message: '请输入有效的IPv4地址',
+    message: '请输入有效的 IPv4 地址',
     rule: /^(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)\.(25[0-5]|2[0-4]\d|[01]?\d\d?)$/i
   },
   /**
    * ipv6地址
    */
   ipv6: {
-    message: '请输入有效的IPv6地址',
+    message: '请输入有效的 IPv6 地址',
     rule: /^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/i
   }
 };

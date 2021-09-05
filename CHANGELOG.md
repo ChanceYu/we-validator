@@ -5,6 +5,12 @@
 ## Released
 
 
+### [v2.1.16](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.16)
+- 修复：错误 message 的显示优化[pull](https://github.com/ChanceYu/we-validator/pull/16)
+- 修复：修改空指针和语法修改[pull](https://github.com/ChanceYu/we-validator/pull/17)
+- 修复：required: false 不进行“必须”验证[pull](https://github.com/ChanceYu/we-validator/pull/18)
+
+
 ### [v2.1.15](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.15)
 - 修复：部分ts定义错误[issue](https://github.com/ChanceYu/we-validator/issues/15)
 

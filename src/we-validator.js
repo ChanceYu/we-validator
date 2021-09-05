@@ -70,7 +70,7 @@ class WeValidator {
 
       if(isFunction(rule)){
         if(ruleName === 'required'){
-          return requiredFn(value)
+          return param && requiredFn(value)
         }else{
           if(skip){
             return !requiredFn(value) || rule.call(this, value, param)
