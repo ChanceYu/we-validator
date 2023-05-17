@@ -5,7 +5,7 @@ declare module "we-validator" {
       rules: object,
       messages: object,
       onMessage?: Function,
-      multiple?: boolean
+      multiCheck?: boolean
     }
     class WeValidator {
       constructor(options: Options);
