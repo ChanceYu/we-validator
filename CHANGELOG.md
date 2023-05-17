@@ -4,6 +4,9 @@
 
 ## Released
 
+### [v2.1.17](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.17)
+- 修复：multiple 类型声明错误[issue](https://github.com/ChanceYu/we-validator/issues/25)
+
 
 ### [v2.1.16](https://github.com/ChanceYu/we-validator/releases/tag/v2.1.16)
 - 修复：错误 message 的显示优化[pull](https://github.com/ChanceYu/we-validator/pull/16)
