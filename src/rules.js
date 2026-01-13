@@ -99,7 +99,7 @@ module.exports = {
   length: {
     message: '请输入 {0} 个字符',
     rule(value, param){
-      return value.length == param
+      return value.length === param
     }
   },
   /**

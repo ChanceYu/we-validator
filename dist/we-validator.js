@@ -1,6 +1,6 @@
 /*!
  * we-validator
- * version: 2.1.17
+ * version: 2.1.18
  * address: https://github.com/ChanceYu/we-validator#readme
  * author:  ChanceYu <i.fish@foxmail.com>
  * license: MIT
@@ -486,7 +486,7 @@ WeValidator.checkValue = function (ruleName, value, param, skip) {
 
   if (isFunction(rule)) {
     if (ruleName === 'required') {
-      return param && requiredFn(value);
+      return requiredFn(value);
     } else {
       if (skip) {
         return !requiredFn(value) || rule.call(this, value, param);
@@ -610,7 +610,7 @@ module.exports = {
   length: {
     message: '请输入 {0} 个字符',
     rule: function rule(value, param) {
-      return value.length == param;
+      return value.length === param;
     }
   },
   /**
